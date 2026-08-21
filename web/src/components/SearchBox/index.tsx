@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { Loader2, LocateFixed, X } from "lucide-react";
 import type { LngLat } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,8 @@ export default function SearchBox({
   onArm,
   onSelect,
   onClear,
+  onLocate,
+  locating,
 }: {
   kind: "a" | "b";
   label: string;
@@ -23,6 +25,9 @@ export default function SearchBox({
   onArm: () => void;
   onSelect: (point: LngLat, label: string) => void;
   onClear: () => void;
+  /** when provided (start field), shows a "use my location" button */
+  onLocate?: () => void;
+  locating?: boolean;
 }) {
   const [focused, setFocused] = useState(false);
   const [query, setQuery] = useState("");
@@ -116,7 +121,7 @@ export default function SearchBox({
           </ul>
         )}
       </div>
-      {valueLabel && !focused && (
+      {valueLabel && !focused ? (
         <button
           className="shrink-0 text-faint transition-colors hover:text-foreground"
           aria-label={`Clear ${label}`}
@@ -124,6 +129,17 @@ export default function SearchBox({
         >
           <X className="size-4" />
         </button>
+      ) : (
+        onLocate && (
+          <button
+            className="shrink-0 text-muted-foreground transition-colors hover:text-primary disabled:opacity-50"
+            aria-label="Use my location"
+            onClick={onLocate}
+            disabled={locating}
+          >
+            {locating ? <Loader2 className="size-4 animate-spin" /> : <LocateFixed className="size-4" />}
+          </button>
+        )
       )}
     </div>
   );

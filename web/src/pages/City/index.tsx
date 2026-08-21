@@ -9,9 +9,11 @@ import { primeAudio, releaseWakeLock, requestWakeLock } from "@/lib/alerts";
 import { useRouter } from "@/hooks/useRouter";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useDriveAlerts } from "@/hooks/useDriveAlerts";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { useTheme } from "@/components/ThemeProvider";
 import MapView, { type Focus } from "@/components/MapView";
 import Panel, { type Mode } from "@/components/Panel";
+import MobilePanel from "@/components/MobilePanel";
 import RoutePanel, { type Arm } from "@/components/RoutePanel";
 import ExposurePanel from "@/components/ExposurePanel";
 import DriveControls from "@/components/DriveControls";
@@ -44,6 +46,7 @@ export default function City() {
   const [locating, setLocating] = useState(false);
 
   const { theme } = useTheme();
+  const isMobile = useIsMobile();
   const { ready, routing, result, load, request, clear } = useRouter();
   const geo = useGeolocation();
   const drive = useDriveAlerts(driveMode ? (geo.fix?.point ?? null) : null, cameras, {
@@ -103,6 +106,18 @@ export default function City() {
   };
 
   useEffect(() => () => releaseWakeLock(), []);
+
+  // offset the map's top controls below the NavBar while driving
+  useEffect(() => {
+    document.body.classList.toggle("driving", driving);
+    return () => document.body.classList.remove("driving");
+  }, [driving]);
+
+  // mobile: one tap turns on GPS + enters the driving nav view
+  const onStartDriving = () => {
+    if (!driveMode) onToggleDrive(true);
+    setDriving(true);
+  };
 
   // ---- map click: endpoints or exposure ----
   const onPick = useCallback((p: LngLat) => {
@@ -254,21 +269,12 @@ export default function City() {
         />
       )}
 
-      {!driving && (
-        <Panel mode={mode} onMode={switchMode} meta={meta} cityName={`${meta.city}, ${meta.state}`}>
-        <DriveControls
-          locating={locating}
-          driveMode={driveMode}
-          watching={geo.watching}
-          loggedCount={drive.loggedCount}
-          accuracyM={geo.fix?.accuracyM ?? null}
-          error={geo.error}
-          onLocate={onLocate}
-          onToggleDrive={onToggleDrive}
-          onStart={() => setDriving(true)}
-        />
-        {mode === "route" ? (
-          <RoutePanel
+      {!driving &&
+        (isMobile ? (
+          <MobilePanel
+            mode={mode}
+            onMode={switchMode}
+            cityName={`${meta.city}, ${meta.state}`}
             start={start}
             end={end}
             startLabel={startLabel}
@@ -287,12 +293,50 @@ export default function City() {
             result={result}
             applyPreset={applyPreset}
             reset={reset}
+            onLocate={onLocate}
+            locating={locating}
+            onStartDrive={onStartDriving}
+            exposure={exposure}
           />
         ) : (
-          <ExposurePanel exposure={exposure} />
-        )}
-        </Panel>
-      )}
+          <Panel mode={mode} onMode={switchMode} meta={meta} cityName={`${meta.city}, ${meta.state}`}>
+            <DriveControls
+              locating={locating}
+              driveMode={driveMode}
+              watching={geo.watching}
+              loggedCount={drive.loggedCount}
+              accuracyM={geo.fix?.accuracyM ?? null}
+              error={geo.error}
+              onLocate={onLocate}
+              onToggleDrive={onToggleDrive}
+              onStart={() => setDriving(true)}
+            />
+            {mode === "route" ? (
+              <RoutePanel
+                start={start}
+                end={end}
+                startLabel={startLabel}
+                endLabel={endLabel}
+                arm={arm}
+                setArm={setArm}
+                bbox={meta.bbox}
+                presets={meta.presets}
+                onSelect={onSelect}
+                onClear={onClear}
+                penaltyS={penaltyS}
+                setPenaltyS={setPenaltyS}
+                alprOnly={alprOnly}
+                setAlprOnly={setAlprOnly}
+                routing={routing}
+                result={result}
+                applyPreset={applyPreset}
+                reset={reset}
+              />
+            ) : (
+              <ExposurePanel exposure={exposure} />
+            )}
+          </Panel>
+        ))}
 
       {!driving && <Legend alprOnly={alprOnly} />}
     </>

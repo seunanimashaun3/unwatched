@@ -142,6 +142,12 @@
   }
 }
 
+/* When the drive NavBar is showing, push the map's top-right zoom controls
+   below it so they don't overlap. */
+body.driving .maplibregl-ctrl-top-right {
+  margin-top: 64px;
+}
+
 /* Glassy floating panel over the map. */
 .glass {
   background: var(--panel);
