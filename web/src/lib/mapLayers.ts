@@ -46,6 +46,7 @@ export function pointsFC(
     type: "FeatureCollection",
     features: indices.map((ci) => ({
       type: "Feature",
+      id: ci, // so a tap on a highlighted camera can look it up
       geometry: { type: "Point", coordinates: [cameras[ci][0], cameras[ci][1]] },
       properties: {},
     })),
@@ -116,14 +117,26 @@ export function initMapLayers(m: maplibregl.Map, cameras: Camera[]) {
       "circle-stroke-color": "rgba(0,0,0,0.5)",
     },
   });
+  // soft halo behind highlighted cameras so they read as "big & bright"
+  m.addLayer({
+    id: "passed-glow",
+    type: "circle",
+    source: "passed",
+    paint: {
+      "circle-radius": zoomRadius(10, 20),
+      "circle-color": COLORS.alert,
+      "circle-blur": 1,
+      "circle-opacity": 0.45,
+    },
+  });
   m.addLayer({
     id: "passed",
     type: "circle",
     source: "passed",
     paint: {
-      "circle-radius": zoomRadius(5, 10),
+      "circle-radius": zoomRadius(6, 12),
       "circle-color": COLORS.alert,
-      "circle-stroke-width": 2,
+      "circle-stroke-width": 2.5,
       "circle-stroke-color": "#fff",
     },
   });

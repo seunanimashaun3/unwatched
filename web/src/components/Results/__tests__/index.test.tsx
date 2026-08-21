@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Results from "@/components/Results";
 import type { RouteResult } from "@/lib/types";
 
@@ -38,5 +39,33 @@ describe("Results", () => {
     render(<Results fast={route(360, 3000, [1])} priv={route(600, 4000, [])} />);
     const zero = screen.getAllByTestId("cam-count").find((n) => n.textContent === "0");
     expect(zero!.className).toMatch(/text-safe/);
+  });
+
+  it("lets you select which route's cameras are shown", async () => {
+    const onSelectRoute = vi.fn();
+    render(
+      <Results
+        fast={route(360, 3000, [1, 2, 3])}
+        priv={route(600, 4000, [3])}
+        selected="private"
+        onSelectRoute={onSelectRoute}
+      />,
+    );
+    await userEvent.click(screen.getByRole("button", { name: /Fastest route/i }));
+    expect(onSelectRoute).toHaveBeenCalledWith("fast");
+  });
+
+  it("marks the selected route as showing its cameras", () => {
+    render(
+      <Results
+        fast={route(360, 3000, [1])}
+        priv={route(600, 4000, [])}
+        selected="fast"
+        onSelectRoute={vi.fn()}
+      />,
+    );
+    // the selected (fastest) card carries the "cameras shown" marker
+    const fastCard = screen.getByRole("button", { name: /Fastest route/i });
+    expect(fastCard.textContent).toMatch(/cameras shown/i);
   });
 });

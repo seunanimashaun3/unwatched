@@ -26,6 +26,8 @@ function setup(overrides: Partial<React.ComponentProps<typeof RoutePanel>> = {})
     setAlprOnly: vi.fn(),
     routing: false,
     result: null,
+    selectedRoute: "private",
+    onSelectRoute: vi.fn(),
     applyPreset: vi.fn(),
     reset: vi.fn(),
     ...overrides,

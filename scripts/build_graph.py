@@ -268,7 +268,11 @@ def main():
     for f in cam_fc["features"]:
         lon, lat = f["geometry"]["coordinates"]
         p = f["properties"]
-        cameras.append({"lon": lon, "lat": lat, "kind": p["kind"], "flock": p["flock"], "operator": p.get("operator")})
+        cameras.append({
+            "lon": lon, "lat": lat, "kind": p["kind"], "flock": p["flock"],
+            "operator": p.get("operator"),
+            "direction": p.get("direction"), "zone": p.get("zone"),
+        })
 
     print("  assigning cameras to edges...")
     edge_cams = assign_cameras(kept_edges, cameras)
@@ -288,10 +292,13 @@ def main():
          "edgeCams": out_edge_cams, "classSpeedKmh": CLASS_SPEED_KMH, "seeRadiusM": SEE_RADIUS_M},
         separators=(",", ":"),
     ))
+    # [lon, lat, isAlpr, isFlock, operator, direction(deg|null), zone]
     (out / "cameras.json").write_text(json.dumps(
         {"seeRadiusM": SEE_RADIUS_M,
          "cameras": [[round(c["lon"], 6), round(c["lat"], 6), 1 if c["kind"] == "alpr" else 0,
-                      1 if c["flock"] else 0, c["operator"] or ""] for c in cameras]},
+                      1 if c["flock"] else 0, c["operator"] or "",
+                      round(c["direction"]) if c.get("direction") is not None else None,
+                      c.get("zone") or ""] for c in cameras]},
         separators=(",", ":"),
     ))
     neigh = raw_dir / "neighborhoods.geojson"

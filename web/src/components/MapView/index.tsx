@@ -6,6 +6,7 @@ import { buildMapStyle, cartoTiles } from "@/lib/mapStyle";
 import type { Theme } from "@/components/ThemeProvider";
 import { emptyFC, initMapLayers, lineFC, pointsFC, setCamVisibility } from "@/lib/mapLayers";
 import { syncLiveMarker, syncMarker } from "@/lib/markers";
+import { reverseGeocode } from "@/lib/geocode";
 import type { Mode } from "@/components/Panel";
 
 /** A point to fly to, tagged with a nonce so repeats re-trigger the effect. */
@@ -32,6 +33,7 @@ export default function MapView({
   livePosition,
   follow,
   result,
+  highlightCameras,
   alprOnly,
   onPick,
   onMoveStart,
@@ -49,6 +51,8 @@ export default function MapView({
   livePosition: LngLat | null;
   follow: boolean;
   result: RouteResponse | null;
+  /** camera indices to highlight big & bright (the selected route's cameras). */
+  highlightCameras: number[];
   alprOnly: boolean;
   onPick: (p: LngLat) => void;
   onMoveStart: (p: LngLat) => void;
@@ -62,9 +66,13 @@ export default function MapView({
   const markerE = useRef<maplibregl.Marker | null>(null);
   const markerLive = useRef<maplibregl.Marker | null>(null);
 
-  // keep a stable click handler that reads the latest onPick
+  // keep stable refs for the latest onPick / cameras (handlers registered once)
   const pick = useRef(onPick);
   pick.current = onPick;
+  const camsRef = useRef(cameras);
+  camsRef.current = cameras;
+  const popup = useRef<maplibregl.Popup | null>(null);
+  const popupSeq = useRef(0);
 
   // ---- init once ----
   useEffect(() => {
@@ -87,9 +95,57 @@ export default function MapView({
       setCamVisibility(m, alprOnly);
     });
 
-    m.on("click", (e) => pick.current([e.lngLat.lng, e.lngLat.lat]));
+    // a camera under the tap opens its details popup; otherwise set an endpoint
+    const CAM_LAYERS = ["passed", "cam-glow", "cam-dot"];
+    m.on("click", (e) => {
+      const hit = m.queryRenderedFeatures(e.point, { layers: CAM_LAYERS.filter((l) => m.getLayer(l)) });
+      if (hit.length) {
+        const idx = hit[0].id as number;
+        showCameraPopup(m, idx);
+        return;
+      }
+      pick.current([e.lngLat.lng, e.lngLat.lat]);
+    });
+    CAM_LAYERS.forEach((l) => {
+      m.on("mouseenter", l, () => (m.getCanvas().style.cursor = "pointer"));
+      m.on("mouseleave", l, () => (m.getCanvas().style.cursor = "crosshair"));
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cameras]);
+
+  function camHtml(cam: Camera, address: string): string {
+    const [, , isAlpr, isFlock, operator, direction, zone] = cam;
+    const kind = isAlpr ? "License-plate reader" : "Surveillance camera";
+    const op = operator ? String(operator) : "";
+    const meta: string[] = [];
+    if (direction != null) meta.push(`Faces ${bearingToCompass(direction)}`);
+    if (zone) meta.push(`${zone} zone`);
+    const parts = [`<div class="cam-kind">${kind}</div>`];
+    // operator OR a Flock tag — never both (avoids "Flock Safety" twice)
+    if (op) parts.push(`<div class="cam-op">${escapeHtml(op)}</div>`);
+    else if (isFlock) parts.push(`<div class="cam-tag">Flock Safety</div>`);
+    if (meta.length) parts.push(`<div class="cam-meta">${escapeHtml(meta.join(" · "))}</div>`);
+    parts.push(`<div class="cam-addr">${escapeHtml(address)}</div>`);
+    return `<div class="cam-popup">${parts.join("")}</div>`;
+  }
+
+  function showCameraPopup(m: maplibregl.Map, idx: number) {
+    const cam = camsRef.current[idx];
+    if (!cam) return;
+    const [lon, lat] = cam;
+    const seq = ++popupSeq.current;
+    popup.current?.remove();
+    const p = new maplibregl.Popup({ offset: 14, closeButton: true, maxWidth: "260px" })
+      .setLngLat([lon, lat])
+      .setHTML(camHtml(cam, "Locating address…"))
+      .addTo(m);
+    popup.current = p;
+    reverseGeocode(lon, lat).then((addr) => {
+      if (popupSeq.current === seq && popup.current === p) {
+        p.setHTML(camHtml(cam, addr || `${lat.toFixed(5)}, ${lon.toFixed(5)}`));
+      }
+    });
+  }
 
   // ---- markers ----
   useEffect(() => {
@@ -103,7 +159,7 @@ export default function MapView({
       markerE.current = syncMarker(map.current, markerE.current, exposurePoint, "exp", () => {});
   }, [exposurePoint]);
 
-  // ---- draw routes + passed cameras ----
+  // ---- draw routes ----
   useEffect(() => {
     const m = map.current;
     if (!m || !loaded.current) return;
@@ -111,9 +167,6 @@ export default function MapView({
     const priv = result?.ok ? result.private : undefined;
     (m.getSource("route-fast") as maplibregl.GeoJSONSource)?.setData(fast ? lineFC(fast.path) : emptyFC());
     (m.getSource("route-private") as maplibregl.GeoJSONSource)?.setData(priv ? lineFC(priv.path) : emptyFC());
-    (m.getSource("passed") as maplibregl.GeoJSONSource)?.setData(
-      priv ? pointsFC(priv.cameras, cameras) : emptyFC(),
-    );
     if (fast && priv) {
       const b = new maplibregl.LngLatBounds();
       [...fast.path, ...priv.path].forEach((p) => b.extend(p));
@@ -125,6 +178,13 @@ export default function MapView({
       m.fitBounds(b, { padding, maxZoom: 15 });
     }
   }, [result, cameras]);
+
+  // ---- highlight the selected route's cameras (big & bright) ----
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !loaded.current) return;
+    (m.getSource("passed") as maplibregl.GeoJSONSource)?.setData(pointsFC(highlightCameras, cameras));
+  }, [highlightCameras, cameras]);
 
   // ---- camera visibility ----
   useEffect(() => {
@@ -164,4 +224,15 @@ export default function MapView({
   }, [livePosition, follow]);
 
   return <div className="fixed inset-0 h-screen w-screen" ref={el} />;
+}
+
+function bearingToCompass(deg: number): string {
+  const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  return dirs[Math.round(deg / 45) % 8];
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/[&<>"']/g, (c) => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string
+  ));
 }

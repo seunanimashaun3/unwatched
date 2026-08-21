@@ -7,7 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import SearchBox from "@/components/SearchBox";
-import Results, { Verdict } from "@/components/Results";
+import Results, { Verdict, type SelectedRoute } from "@/components/Results";
 
 export type Arm = "a" | "b" | null;
 
@@ -34,6 +34,8 @@ export default function RoutePanel({
   setAlprOnly,
   routing,
   result,
+  selectedRoute,
+  onSelectRoute,
   applyPreset,
   reset,
 }: {
@@ -53,6 +55,8 @@ export default function RoutePanel({
   setAlprOnly: (b: boolean) => void;
   routing: boolean;
   result: RouteResponse | null;
+  selectedRoute: SelectedRoute;
+  onSelectRoute: (r: SelectedRoute) => void;
   applyPreset: (a: LngLat, b: LngLat) => void;
   reset: () => void;
 }) {
@@ -92,7 +96,7 @@ export default function RoutePanel({
       {!routing && result && !result.ok && <Verdict role="alert">{result.reason}</Verdict>}
 
       {!routing && result?.ok && result.fast && result.private && (
-        <Results fast={result.fast} priv={result.private} />
+        <Results fast={result.fast} priv={result.private} selected={selectedRoute} onSelectRoute={onSelectRoute} />
       )}
 
       <div className="mt-5">

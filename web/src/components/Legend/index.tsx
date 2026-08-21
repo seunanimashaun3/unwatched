@@ -1,13 +1,25 @@
-function Row({ color, bar, label }: { color: string; bar?: boolean; label: string }) {
+function Row({
+  color,
+  bar,
+  ring,
+  label,
+}: {
+  color: string;
+  bar?: boolean;
+  ring?: boolean;
+  label: string;
+}) {
   return (
     <div className="flex items-center gap-2 text-muted-foreground">
       <span
         className="shrink-0"
         style={{
           background: color,
-          width: 11,
-          height: bar ? 4 : 11,
+          width: bar ? 11 : ring ? 12 : 11,
+          height: bar ? 4 : ring ? 12 : 11,
           borderRadius: bar ? 2 : "50%",
+          border: ring ? "2px solid #fff" : undefined,
+          boxSizing: "border-box",
         }}
       />
       {label}
@@ -23,6 +35,7 @@ export default function Legend({ alprOnly }: { alprOnly: boolean }) {
     >
       <Row color="#ff4d5e" label="Plate reader (ALPR)" />
       {!alprOnly && <Row color="#8b95a7" label="Other camera" />}
+      <Row color="#ff4d5e" ring label="On selected route (tap a dot for details)" />
       <Row color="#35e0a1" bar label="Least-watched route" />
       <Row color="#9aa4b6" bar label="Fastest route" />
     </div>

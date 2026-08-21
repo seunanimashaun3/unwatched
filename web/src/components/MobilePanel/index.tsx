@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SearchBox from "@/components/SearchBox";
-import Results, { Verdict } from "@/components/Results";
+import Results, { Verdict, type SelectedRoute } from "@/components/Results";
 import ExposurePanel from "@/components/ExposurePanel";
 import ThemeToggle from "@/components/ThemeToggle";
 import type { Mode } from "@/components/Panel";
@@ -41,6 +41,8 @@ export interface MobilePanelProps {
   setAlprOnly: (b: boolean) => void;
   routing: boolean;
   result: RouteResponse | null;
+  selectedRoute: SelectedRoute;
+  onSelectRoute: (r: SelectedRoute) => void;
   applyPreset: (a: LngLat, b: LngLat) => void;
   reset: () => void;
   // drive + locate
@@ -145,7 +147,12 @@ export default function MobilePanel(props: MobilePanelProps) {
                 {hasRoute && (
                   <>
                     <div className="mt-3">
-                      <Results fast={props.result!.fast!} priv={props.result!.private!} />
+                      <Results
+                        fast={props.result!.fast!}
+                        priv={props.result!.private!}
+                        selected={props.selectedRoute}
+                        onSelectRoute={props.onSelectRoute}
+                      />
                     </div>
 
                     <Button className="mt-3 h-12 w-full gap-2 text-[15px]" onClick={props.onStartDrive}>

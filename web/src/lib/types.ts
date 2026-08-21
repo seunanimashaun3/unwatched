@@ -15,7 +15,8 @@ export interface Graph {
 }
 
 /** Camera: [lon, lat, isAlpr(0|1), isFlock(0|1), operator]. */
-export type Camera = [number, number, number, number, string];
+/** [lon, lat, isAlpr(0|1), isFlock(0|1), operator, direction(deg|null), zone]. */
+export type Camera = [number, number, number, number, string, (number | null)?, string?];
 
 export interface CameraData {
   seeRadiusM: number;

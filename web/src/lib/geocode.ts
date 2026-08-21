@@ -38,10 +38,7 @@ export async function geocode(
   }
 }
 
-function toResult(f: any): GeoResult | null {
-  const c = f?.geometry?.coordinates;
-  if (!c || c.length < 2) return null;
-  const p = f.properties || {};
+function labelFromProps(p: any): string {
   const bits = [
     p.name,
     [p.housenumber, p.street].filter(Boolean).join(" "),
@@ -49,8 +46,30 @@ function toResult(f: any): GeoResult | null {
     p.state,
   ].filter(Boolean);
   // de-dupe consecutive equal parts (e.g. name === street)
-  const label = bits.filter((b, i) => b && b !== bits[i - 1]).join(", ");
-  return { label: label || "Unnamed place", point: [c[0], c[1]] };
+  return bits.filter((b: string, i: number) => b && b !== bits[i - 1]).join(", ");
+}
+
+function toResult(f: any): GeoResult | null {
+  const c = f?.geometry?.coordinates;
+  if (!c || c.length < 2) return null;
+  return { label: labelFromProps(f.properties || {}) || "Unnamed place", point: [c[0], c[1]] };
+}
+
+/** Reverse-geocode a point to the nearest street address (Photon). null on failure. */
+export async function reverseGeocode(
+  lon: number,
+  lat: number,
+  signal?: AbortSignal,
+): Promise<string | null> {
+  try {
+    const r = await fetch(`https://photon.komoot.io/reverse?lon=${lon}&lat=${lat}`, { signal });
+    if (!r.ok) return null;
+    const data = await r.json();
+    const label = labelFromProps(data.features?.[0]?.properties || {});
+    return label || null;
+  } catch {
+    return null;
+  }
 }
 
 function inBox(p: LngLat, [w, s, e, n]: Bbox): boolean {

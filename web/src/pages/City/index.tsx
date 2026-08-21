@@ -14,6 +14,7 @@ import MapView, { type Focus } from "@/components/MapView";
 import Panel, { type Mode } from "@/components/Panel";
 import MobilePanel from "@/components/MobilePanel";
 import RoutePanel, { type Arm } from "@/components/RoutePanel";
+import type { SelectedRoute } from "@/components/Results";
 import ExposurePanel from "@/components/ExposurePanel";
 import DriveControls from "@/components/DriveControls";
 import DriveAlert from "@/components/DriveAlert";
@@ -48,6 +49,7 @@ export default function City({
   const [focus, setFocus] = useState<Focus | null>(null);
   const nonce = useRef(0);
 
+  const [selectedRoute, setSelectedRoute] = useState<SelectedRoute>("private");
   const [driveMode, setDriveMode] = useState(false);
   const [driving, setDriving] = useState(false);
   const [locating, setLocating] = useState(false);
@@ -232,6 +234,14 @@ export default function City({
   const nextCam = liveFix ? nearestCamera(liveFix, cameras, alprOnly) : null;
   const speedMph = geo.fix?.speedMps != null ? geo.fix.speedMps * 2.23694 : null;
 
+  // cameras of the selected route, highlighted on the map
+  const highlightCameras =
+    result?.ok && result.fast && result.private
+      ? selectedRoute === "fast"
+        ? result.fast.cameras
+        : result.private.cameras
+      : [];
+
   return (
     <>
       <MapView
@@ -247,6 +257,7 @@ export default function City({
         livePosition={driveMode ? (geo.fix?.point ?? null) : null}
         follow={driveMode}
         result={result}
+        highlightCameras={highlightCameras}
         alprOnly={alprOnly}
         onPick={onPick}
         onMoveStart={(p) => {
@@ -300,6 +311,8 @@ export default function City({
             setAlprOnly={setAlprOnly}
             routing={routing}
             result={result}
+            selectedRoute={selectedRoute}
+            onSelectRoute={setSelectedRoute}
             applyPreset={applyPreset}
             reset={reset}
             onLocate={onLocate}
@@ -338,6 +351,8 @@ export default function City({
                 setAlprOnly={setAlprOnly}
                 routing={routing}
                 result={result}
+                selectedRoute={selectedRoute}
+                onSelectRoute={setSelectedRoute}
                 applyPreset={applyPreset}
                 reset={reset}
               />

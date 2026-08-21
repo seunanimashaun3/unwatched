@@ -28,15 +28,46 @@ export function Verdict({
   );
 }
 
-export default function Results({ fast, priv }: { fast: RouteResult; priv: RouteResult }) {
+export type SelectedRoute = "fast" | "private";
+
+export default function Results({
+  fast,
+  priv,
+  selected = "private",
+  onSelectRoute,
+}: {
+  fast: RouteResult;
+  priv: RouteResult;
+  selected?: SelectedRoute;
+  onSelectRoute?: (r: SelectedRoute) => void;
+}) {
   const v = summarizeRoutes(fast, priv);
 
   return (
     <>
       <div className="mt-1 grid gap-2.5">
-        <RouteCard kind="fast" title="Fastest route" time={fast.timeS} dist={fast.distanceM} cams={fast.cameras.length} />
-        <RouteCard kind="priv" title="Least-watched route" time={priv.timeS} dist={priv.distanceM} cams={priv.cameras.length} />
+        <RouteCard
+          kind="fast"
+          title="Fastest route"
+          time={fast.timeS}
+          dist={fast.distanceM}
+          cams={fast.cameras.length}
+          selected={selected === "fast"}
+          onSelect={onSelectRoute ? () => onSelectRoute("fast") : undefined}
+        />
+        <RouteCard
+          kind="priv"
+          title="Least-watched route"
+          time={priv.timeS}
+          dist={priv.distanceM}
+          cams={priv.cameras.length}
+          selected={selected === "private"}
+          onSelect={onSelectRoute ? () => onSelectRoute("private") : undefined}
+        />
       </div>
+      {onSelectRoute && (
+        <p className="mt-1.5 text-[11px] text-faint">Tap a route to highlight its cameras on the map.</p>
+      )}
 
       {v.kind === "identical" ? (
         <Verdict>
