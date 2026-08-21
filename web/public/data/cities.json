@@ -31,6 +31,21 @@
       }
     },
     {
+      "slug": "denver-co",
+      "city": "Denver",
+      "state": "CO",
+      "center": [
+        -104.984862,
+        39.7392364
+      ],
+      "zoom": 9.8,
+      "counts": {
+        "alpr": 446,
+        "cameras": 1692,
+        "flock": 383
+      }
+    },
+    {
       "slug": "new-york-ny",
       "city": "New York",
       "state": "NY",
