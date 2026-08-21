@@ -1,0 +1,50 @@
+{
+  "slug": "nashville-tn",
+  "city": "Nashville",
+  "state": "TN",
+  "center": [
+    -86.55,
+    36.185
+  ],
+  "zoom": 10.4,
+  "bbox": [
+    -86.86,
+    36.09,
+    -86.24,
+    36.28
+  ],
+  "presets": [
+    {
+      "label": "Lebanon \u2192 Nashville",
+      "a": [
+        -86.2911,
+        36.2081
+      ],
+      "b": [
+        -86.7816,
+        36.1627
+      ]
+    },
+    {
+      "label": "Mt. Juliet \u2192 Downtown",
+      "a": [
+        -86.5186,
+        36.2009
+      ],
+      "b": [
+        -86.7816,
+        36.1627
+      ]
+    }
+  ],
+  "overtureRelease": "2026-07-22.0",
+  "cameraSource": "DeFlock / OpenStreetMap (crowdsourced, incomplete lower bound)",
+  "counts": {
+    "nodes": 121994,
+    "edges": 149489,
+    "cameras": 289,
+    "alpr": 270,
+    "flock": 250,
+    "watchedEdges": 1215
+  }
+}

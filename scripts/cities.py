@@ -72,6 +72,19 @@ CITIES = {
         "zoom": 11.3,
         "presets": [],
     },
+    "nashville-tn": {
+        # Corridor covering Nashville + the Flock-heavy suburbs out to Lebanon,
+        # so a Lebanon -> Nashville commute can be routed in one graph.
+        "name": "Nashville",
+        "state": "TN",
+        "bbox": (-86.86, 36.09, -86.24, 36.28),
+        "center": [-86.55, 36.185],
+        "zoom": 10.4,
+        "presets": [
+            {"label": "Lebanon → Nashville", "a": [-86.2911, 36.2081], "b": [-86.7816, 36.1627]},
+            {"label": "Mt. Juliet → Downtown", "a": [-86.5186, 36.2009], "b": [-86.7816, 36.1627]},
+        ],
+    },
     "las-vegas-nv": {
         # Strip + downtown + Paradise. The full metro's grid produced a ~6.8 MB
         # graph — too heavy to ship — so this trades sprawl for a sane size.
