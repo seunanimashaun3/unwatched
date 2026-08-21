@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ChevronDown, LocateFixed, Loader2 } from "lucide-react";
+import { ChevronDown, LocateFixed, Loader2, Plus } from "lucide-react";
 import type { CityIndexEntry } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { nearestCity } from "@/lib/proximity";
+import { REQUEST_CITY_URL } from "@/lib/cities";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -73,6 +74,20 @@ export default function CitySwitcher({
             <span className="shrink-0 text-xs tabular-nums text-alert">{c.counts.alpr} ALPR</span>
           </button>
         ))}
+        {REQUEST_CITY_URL && (
+          <>
+            <div className="my-1 h-px bg-border" />
+            <a
+              href={REQUEST_CITY_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              <Plus className="size-4" />
+              Don't see your city? Request it
+            </a>
+          </>
+        )}
       </PopoverContent>
     </Popover>
   );

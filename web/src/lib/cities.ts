@@ -23,6 +23,6 @@ export async function fetchCityCameras(slug: string): Promise<CameraData> {
   return r.json();
 }
 
-/** GitHub issue link used by the "request a city" affordance. */
-export const REQUEST_CITY_URL =
-  "https://github.com/yorubaphenom/unwatched/issues/new?title=City+request&body=Please+add:+";
+/** "Request a city" link. Set this to a Google Form / Tally URL to collect
+ *  requests without exposing a personal email. Empty = hide the affordance. */
+export const REQUEST_CITY_URL = "";
