@@ -76,6 +76,7 @@ export default function Panel({
         open
         modal={false}
         dismissible={false}
+        snapToSequentialPoint
         snapPoints={SNAP_POINTS}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}

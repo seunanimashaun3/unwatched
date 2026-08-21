@@ -4,7 +4,7 @@ import type { Camera, LngLat, Meta } from "@/lib/types";
 import { computeExposure, type Exposure } from "@/lib/exposure";
 import { fetchCityCameras, fetchCityMeta } from "@/lib/cities";
 import { fmtPoint } from "@/lib/presets";
-import { fmtCamera } from "@/lib/proximity";
+import { fmtCamera, nearestCamera } from "@/lib/proximity";
 import { primeAudio, releaseWakeLock, requestWakeLock } from "@/lib/alerts";
 import { useRouter } from "@/hooks/useRouter";
 import { useGeolocation } from "@/hooks/useGeolocation";
@@ -16,6 +16,7 @@ import RoutePanel, { type Arm } from "@/components/RoutePanel";
 import ExposurePanel from "@/components/ExposurePanel";
 import DriveControls from "@/components/DriveControls";
 import DriveAlert from "@/components/DriveAlert";
+import NavBar from "@/components/NavBar";
 import Legend from "@/components/Legend";
 import LoadingScreen from "@/components/LoadingScreen";
 
@@ -39,6 +40,7 @@ export default function City() {
   const nonce = useRef(0);
 
   const [driveMode, setDriveMode] = useState(false);
+  const [driving, setDriving] = useState(false);
   const [locating, setLocating] = useState(false);
 
   const { theme } = useTheme();
@@ -96,6 +98,7 @@ export default function City() {
     } else {
       geo.stop();
       releaseWakeLock();
+      setDriving(false);
     }
   };
 
@@ -200,6 +203,11 @@ export default function City() {
 
   if (!meta) return <LoadingScreen label="Loading city…" />;
 
+  // live driving readouts
+  const liveFix = driveMode ? (geo.fix?.point ?? null) : null;
+  const nextCam = liveFix ? nearestCamera(liveFix, cameras, alprOnly) : null;
+  const speedMph = geo.fix?.speedMps != null ? geo.fix.speedMps * 2.23694 : null;
+
   return (
     <>
       <MapView
@@ -236,7 +244,18 @@ export default function City() {
         />
       )}
 
-      <Panel mode={mode} onMode={switchMode} meta={meta} cityName={`${meta.city}, ${meta.state}`}>
+      {driving && (
+        <NavBar
+          nextName={nextCam ? fmtCamera(cameras[nextCam.index]) : null}
+          nextDistanceM={nextCam ? nextCam.distanceM : null}
+          loggedCount={drive.loggedCount}
+          speedMph={speedMph}
+          onEnd={() => setDriving(false)}
+        />
+      )}
+
+      {!driving && (
+        <Panel mode={mode} onMode={switchMode} meta={meta} cityName={`${meta.city}, ${meta.state}`}>
         <DriveControls
           locating={locating}
           driveMode={driveMode}
@@ -246,6 +265,7 @@ export default function City() {
           error={geo.error}
           onLocate={onLocate}
           onToggleDrive={onToggleDrive}
+          onStart={() => setDriving(true)}
         />
         {mode === "route" ? (
           <RoutePanel
@@ -271,9 +291,10 @@ export default function City() {
         ) : (
           <ExposurePanel exposure={exposure} />
         )}
-      </Panel>
+        </Panel>
+      )}
 
-      <Legend alprOnly={alprOnly} />
+      {!driving && <Legend alprOnly={alprOnly} />}
     </>
   );
 }

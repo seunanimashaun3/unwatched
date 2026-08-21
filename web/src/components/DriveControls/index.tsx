@@ -1,4 +1,4 @@
-import { LocateFixed, Loader2, Navigation } from "lucide-react";
+import { LocateFixed, Loader2, Navigation, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -13,6 +13,7 @@ export default function DriveControls({
   error,
   onLocate,
   onToggleDrive,
+  onStart,
 }: {
   locating: boolean;
   driveMode: boolean;
@@ -22,6 +23,7 @@ export default function DriveControls({
   error: string | null;
   onLocate: () => void;
   onToggleDrive: (on: boolean) => void;
+  onStart: () => void;
 }) {
   return (
     <div className="mb-4 rounded-xl border border-border bg-white/[0.02] p-3">
@@ -56,6 +58,10 @@ export default function DriveControls({
           <div className="mt-1.5 text-faint">
             ⚠️ Warns about <b>known</b> cameras only. Have a passenger operate this — don't watch the screen while driving.
           </div>
+          <Button className="mt-3 h-11 w-full gap-1.5" onClick={onStart} disabled={!watching}>
+            <Play className="size-4" />
+            Start driving
+          </Button>
         </div>
       )}
 
