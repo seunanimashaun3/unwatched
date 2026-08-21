@@ -34,9 +34,10 @@ export default function Panel({
     <div
       className={cn(
         "glass scroll-thin fixed z-10 overflow-y-auto border-border shadow-2xl",
-        // mobile: bottom sheet
-        "inset-x-0 bottom-0 max-h-[82dvh] rounded-t-2xl border-t",
-        // desktop: floating card, top-left
+        // mobile: short bottom sheet so the map stays visible; collapses to a peek
+        "inset-x-0 bottom-0 rounded-t-2xl border-t",
+        !collapsed && "max-h-[52dvh]",
+        // desktop: floating card, top-left (collapse doesn't apply)
         "sm:inset-x-auto sm:bottom-auto sm:left-4 sm:top-4 sm:max-h-[calc(100dvh-2rem)] sm:w-[372px] sm:max-w-[calc(100vw-2rem)] sm:rounded-2xl sm:border",
       )}
     >
@@ -71,28 +72,29 @@ export default function Panel({
           <button
             type="button"
             className={cn("ml-1 self-center text-muted-foreground transition-transform sm:hidden", !collapsed && "rotate-180")}
-            aria-hidden="true"
-            tabIndex={-1}
+            aria-label={collapsed ? "Expand panel" : "Collapse panel"}
             onClick={() => setCollapsed((c) => !c)}
           >
             <ChevronDown className="size-4" />
           </button>
         </div>
 
-        <p className="mb-3.5 mt-1.5 text-[12.5px] leading-normal text-muted-foreground">
-          {TAGLINE[mode]}
-        </p>
-
-        <Tabs value={mode} onValueChange={(v) => onMode(v as Mode)} className="mb-4">
-          <TabsList aria-label="Mode">
-            <TabsTrigger value="route">Plan a route</TabsTrigger>
-            <TabsTrigger value="exposure">Exposure score</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
         {/* collapsible on mobile; always visible on desktop */}
         <div className={cn(collapsed ? "hidden sm:block" : "block")}>
+          {/* tagline is desktop-only to save vertical space on phones */}
+          <p className="mb-3.5 mt-1.5 hidden text-[12.5px] leading-normal text-muted-foreground sm:block">
+            {TAGLINE[mode]}
+          </p>
+
+          <Tabs value={mode} onValueChange={(v) => onMode(v as Mode)} className="mb-4 mt-3 sm:mt-0">
+            <TabsList aria-label="Mode">
+              <TabsTrigger value="route">Plan a route</TabsTrigger>
+              <TabsTrigger value="exposure">Exposure score</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
           {children}
+
           <MetaNote meta={meta} />
         </div>
       </div>
