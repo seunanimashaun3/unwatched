@@ -8,6 +8,7 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import CityCard from "@/components/CityCard";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   const [cities, setCities] = useState<CityIndexEntry[] | null>(null);
@@ -58,12 +59,13 @@ export default function Home() {
     >
       <div className="mx-auto max-w-[940px] px-5 pb-16 pt-[clamp(2rem,8vh,5.5rem)]">
         <header className="mb-9">
-          <div className="flex items-baseline gap-2.5">
+          <div className="flex items-center gap-2.5">
             <span
               className="size-3 self-center rounded-full bg-alert"
               style={{ boxShadow: "0 0 0 5px rgba(255,77,94,0.18)" }}
             />
             <h1 className="text-[clamp(2.1rem,6vw,3.25rem)] font-bold tracking-tight">Unwatched</h1>
+            <ThemeToggle className="ml-auto" />
           </div>
           <p className="mt-3.5 max-w-[620px] text-[clamp(0.95rem,2.2vw,1.125rem)] leading-relaxed text-muted-foreground [&_b]:text-foreground">
             License-plate readers log where you drive, without a warrant. Pick

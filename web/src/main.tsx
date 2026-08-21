@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, useParams } from "react-router-dom";
 import Home from "@/pages/Home";
 import City from "@/pages/City";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./index.css";
 
 // key City on the slug so switching cities remounts the map cleanly
@@ -24,6 +25,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>,
 );

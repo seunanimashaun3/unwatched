@@ -9,6 +9,7 @@ import { primeAudio, releaseWakeLock, requestWakeLock } from "@/lib/alerts";
 import { useRouter } from "@/hooks/useRouter";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useDriveAlerts } from "@/hooks/useDriveAlerts";
+import { useTheme } from "@/components/ThemeProvider";
 import MapView, { type Focus } from "@/components/MapView";
 import Panel, { type Mode } from "@/components/Panel";
 import RoutePanel, { type Arm } from "@/components/RoutePanel";
@@ -40,6 +41,7 @@ export default function City() {
   const [driveMode, setDriveMode] = useState(false);
   const [locating, setLocating] = useState(false);
 
+  const { theme } = useTheme();
   const { ready, routing, result, load, request, clear } = useRouter();
   const geo = useGeolocation();
   const drive = useDriveAlerts(driveMode ? (geo.fix?.point ?? null) : null, cameras, {
@@ -202,6 +204,7 @@ export default function City() {
     <>
       <MapView
         cameras={cameras}
+        theme={theme}
         center={meta.center}
         zoom={meta.zoom}
         focus={focus}

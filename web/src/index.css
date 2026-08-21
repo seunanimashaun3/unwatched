@@ -5,9 +5,39 @@
 /* Unwatched dark identity, mapped onto shadcn's semantic tokens.      */
 /* Red = surveillance, green = the safe/least-watched route.           */
 /* ------------------------------------------------------------------ */
+/* Light is the default; add `.dark` on <html> for dark. */
 :root {
   --radius: 0.75rem;
 
+  --background: #eef1f5;
+  --foreground: #14181f;
+  --card: rgba(255, 255, 255, 0.92);
+  --card-foreground: #14181f;
+  --popover: #ffffff;
+  --popover-foreground: #14181f;
+  --primary: #059669;
+  --primary-foreground: #ffffff;
+  --secondary: #e7eaef;
+  --secondary-foreground: #14181f;
+  --muted: #e9ecf1;
+  --muted-foreground: #5b6472;
+  --accent: #e3e7ee;
+  --accent-foreground: #14181f;
+  --destructive: #e5352f;
+  --destructive-foreground: #ffffff;
+  --border: rgba(20, 24, 31, 0.12);
+  --input: rgba(20, 24, 31, 0.18);
+  --ring: #3b82f6;
+
+  /* domain-specific */
+  --alert: #e5352f;
+  --safe: #059669;
+  --faint: #98a0ae;
+  --panel: rgba(255, 255, 255, 0.82);
+  --panel-solid: #ffffff;
+}
+
+.dark {
   --background: #0b0e13;
   --foreground: #eef1f6;
   --card: rgba(18, 22, 30, 0.86);
@@ -28,7 +58,6 @@
   --input: rgba(255, 255, 255, 0.14);
   --ring: #6ea8fe;
 
-  /* domain-specific */
   --alert: #ff4d5e;
   --safe: #35e0a1;
   --faint: #5b6577;

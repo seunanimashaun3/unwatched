@@ -72,6 +72,16 @@ CITIES = {
         "zoom": 11.3,
         "presets": [],
     },
+    "las-vegas-nv": {
+        # Strip + downtown + Paradise. The full metro's grid produced a ~6.8 MB
+        # graph — too heavy to ship — so this trades sprawl for a sane size.
+        "name": "Las Vegas",
+        "state": "NV",
+        "bbox": (-115.28, 36.06, -115.05, 36.23),
+        "center": [-115.16, 36.145],
+        "zoom": 11.2,
+        "presets": [],
+    },
 }
 
 

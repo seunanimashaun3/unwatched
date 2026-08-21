@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { Camera, LngLat, RouteResponse } from "@/lib/types";
-import { MAP_STYLE } from "@/lib/mapStyle";
+import { buildMapStyle, cartoTiles } from "@/lib/mapStyle";
+import type { Theme } from "@/components/ThemeProvider";
 import { emptyFC, initMapLayers, lineFC, pointsFC, setCamVisibility } from "@/lib/mapLayers";
 import { syncLiveMarker, syncMarker } from "@/lib/markers";
 import type { Mode } from "@/components/Panel";
@@ -20,6 +21,7 @@ export interface Focus {
  */
 export default function MapView({
   cameras,
+  theme,
   center,
   zoom,
   focus,
@@ -36,6 +38,7 @@ export default function MapView({
   onMoveEnd,
 }: {
   cameras: Camera[];
+  theme: Theme;
   center: LngLat;
   zoom: number;
   focus: Focus | null;
@@ -68,7 +71,7 @@ export default function MapView({
     if (!el.current || map.current) return;
     const m = new maplibregl.Map({
       container: el.current,
-      style: MAP_STYLE,
+      style: buildMapStyle(theme),
       center,
       zoom,
       attributionControl: false,
@@ -127,6 +130,12 @@ export default function MapView({
   useEffect(() => {
     if (map.current && loaded.current) setCamVisibility(map.current, alprOnly);
   }, [alprOnly]);
+
+  // ---- swap basemap tiles when the theme changes ----
+  useEffect(() => {
+    const src = map.current?.getSource("carto") as maplibregl.RasterTileSource | undefined;
+    src?.setTiles(cartoTiles(theme));
+  }, [theme]);
 
   // clear exposure marker when leaving exposure mode
   useEffect(() => {

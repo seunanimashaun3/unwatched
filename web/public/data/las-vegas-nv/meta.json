@@ -1,0 +1,50 @@
+{
+  "slug": "las-vegas-nv",
+  "city": "Las Vegas",
+  "state": "NV",
+  "center": [
+    -115.16,
+    36.145
+  ],
+  "zoom": 11.2,
+  "bbox": [
+    -115.28,
+    36.06,
+    -115.05,
+    36.23
+  ],
+  "presets": [
+    {
+      "label": "West \u2194 East",
+      "a": [
+        -115.245489,
+        36.145181
+      ],
+      "b": [
+        -115.084746,
+        36.144823
+      ]
+    },
+    {
+      "label": "South \u2194 North",
+      "a": [
+        -115.166852,
+        36.087773
+      ],
+      "b": [
+        -115.164753,
+        36.204326
+      ]
+    }
+  ],
+  "overtureRelease": "2026-07-22.0",
+  "cameraSource": "DeFlock / OpenStreetMap (crowdsourced, incomplete lower bound)",
+  "counts": {
+    "nodes": 120376,
+    "edges": 158820,
+    "cameras": 291,
+    "alpr": 273,
+    "flock": 170,
+    "watchedEdges": 1821
+  }
+}

@@ -1,24 +1,28 @@
 import type maplibregl from "maplibre-gl";
+import type { Theme } from "@/components/ThemeProvider";
 
-export const MAP_STYLE: maplibregl.StyleSpecification = {
-  version: 8,
-  sources: {
-    carto: {
-      type: "raster",
-      tiles: [
-        "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-        "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-        "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-        "https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
-      ],
-      tileSize: 256,
-      attribution:
-        '© <a href="https://openstreetmap.org">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a> · Roads: <a href="https://overturemaps.org">Overture</a> · Cameras: <a href="https://deflock.me">DeFlock</a>',
+const ATTRIBUTION =
+  '© <a href="https://openstreetmap.org">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a> · Roads: <a href="https://overturemaps.org">Overture</a> · Cameras: <a href="https://deflock.me">DeFlock</a>';
+
+/** CARTO raster tiles for the given theme (light = positron, dark = dark matter). */
+export function cartoTiles(theme: Theme): string[] {
+  const set = theme === "dark" ? "dark_all" : "light_all";
+  return ["a", "b", "c", "d"].map(
+    (s) => `https://${s}.basemaps.cartocdn.com/${set}/{z}/{x}/{y}@2x.png`,
+  );
+}
+
+export function buildMapStyle(theme: Theme): maplibregl.StyleSpecification {
+  return {
+    version: 8,
+    sources: {
+      carto: { type: "raster", tiles: cartoTiles(theme), tileSize: 256, attribution: ATTRIBUTION },
     },
-  },
-  layers: [{ id: "carto", type: "raster", source: "carto" }],
-};
+    layers: [{ id: "carto", type: "raster", source: "carto" }],
+  };
+}
 
+// route + marker colors — theme-independent (red = surveillance, green = safe)
 export const COLORS = {
   alert: "#ff4d5e",
   camera: "#8b95a7",

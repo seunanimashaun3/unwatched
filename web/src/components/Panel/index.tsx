@@ -5,6 +5,7 @@ import type { Meta } from "@/lib/types";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MetaNote from "@/components/MetaNote";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export type Mode = "route" | "exposure";
 
@@ -40,15 +41,18 @@ export default function Panel({
         style={{ boxShadow: "0 0 0 4px rgba(255,77,94,0.18)" }}
       />
       <h1 className="text-[22px] font-bold tracking-tight">Unwatched</h1>
-      {cityName && (
-        <Link
-          to="/"
-          aria-label="Change city"
-          className="ml-auto rounded-full border border-border bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
-        >
-          {cityName} ▾
-        </Link>
-      )}
+      <div className="ml-auto flex items-center gap-2">
+        {cityName && (
+          <Link
+            to="/"
+            aria-label="Change city"
+            className="rounded-full border border-border bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
+          >
+            {cityName} ▾
+          </Link>
+        )}
+        <ThemeToggle />
+      </div>
     </div>
   );
 

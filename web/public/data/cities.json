@@ -91,6 +91,21 @@
       }
     },
     {
+      "slug": "las-vegas-nv",
+      "city": "Las Vegas",
+      "state": "NV",
+      "center": [
+        -115.16,
+        36.145
+      ],
+      "zoom": 11.2,
+      "counts": {
+        "alpr": 273,
+        "cameras": 291,
+        "flock": 170
+      }
+    },
+    {
       "slug": "virginia-beach-va",
       "city": "Virginia Beach",
       "state": "VA",
