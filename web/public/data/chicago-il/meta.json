@@ -1,0 +1,50 @@
+{
+  "slug": "chicago-il",
+  "city": "Chicago",
+  "state": "IL",
+  "center": [
+    -87.63,
+    41.885
+  ],
+  "zoom": 11.6,
+  "bbox": [
+    -87.72,
+    41.82,
+    -87.58,
+    41.96
+  ],
+  "presets": [
+    {
+      "label": "West \u2194 East",
+      "a": [
+        -87.699061,
+        41.890028
+      ],
+      "b": [
+        -87.601118,
+        41.891319
+      ]
+    },
+    {
+      "label": "South \u2194 North",
+      "a": [
+        -87.650078,
+        41.841083
+      ],
+      "b": [
+        -87.650046,
+        41.93901
+      ]
+    }
+  ],
+  "overtureRelease": "2026-07-22.0",
+  "cameraSource": "DeFlock / OpenStreetMap (crowdsourced, incomplete lower bound)",
+  "counts": {
+    "nodes": 75971,
+    "edges": 92779,
+    "cameras": 654,
+    "alpr": 316,
+    "flock": 42,
+    "watchedEdges": 4049
+  }
+}

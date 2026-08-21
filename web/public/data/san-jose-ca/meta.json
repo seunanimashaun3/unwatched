@@ -1,0 +1,50 @@
+{
+  "slug": "san-jose-ca",
+  "city": "San Jose",
+  "state": "CA",
+  "center": [
+    -121.886,
+    37.338
+  ],
+  "zoom": 11.4,
+  "bbox": [
+    -122.02,
+    37.25,
+    -121.8,
+    37.44
+  ],
+  "presets": [
+    {
+      "label": "West \u2194 East",
+      "a": [
+        -121.987115,
+        37.345043
+      ],
+      "b": [
+        -121.833455,
+        37.345233
+      ]
+    },
+    {
+      "label": "South \u2194 North",
+      "a": [
+        -121.910933,
+        37.278306
+      ],
+      "b": [
+        -121.91029,
+        37.411141
+      ]
+    }
+  ],
+  "overtureRelease": "2026-07-22.0",
+  "cameraSource": "DeFlock / OpenStreetMap (crowdsourced, incomplete lower bound)",
+  "counts": {
+    "nodes": 135788,
+    "edges": 167220,
+    "cameras": 827,
+    "alpr": 700,
+    "flock": 653,
+    "watchedEdges": 5973
+  }
+}

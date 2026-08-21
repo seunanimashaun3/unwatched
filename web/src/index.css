@@ -1,0 +1,133 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ------------------------------------------------------------------ */
+/* Unwatched dark identity, mapped onto shadcn's semantic tokens.      */
+/* Red = surveillance, green = the safe/least-watched route.           */
+/* ------------------------------------------------------------------ */
+:root {
+  --radius: 0.75rem;
+
+  --background: #0b0e13;
+  --foreground: #eef1f6;
+  --card: rgba(18, 22, 30, 0.86);
+  --card-foreground: #eef1f6;
+  --popover: #12161e;
+  --popover-foreground: #eef1f6;
+  --primary: #35e0a1;
+  --primary-foreground: #05070a;
+  --secondary: #1a1f29;
+  --secondary-foreground: #eef1f6;
+  --muted: #171c25;
+  --muted-foreground: #8b95a7;
+  --accent: #232a36;
+  --accent-foreground: #eef1f6;
+  --destructive: #ff4d5e;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.10);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: #6ea8fe;
+
+  /* domain-specific */
+  --alert: #ff4d5e;
+  --safe: #35e0a1;
+  --faint: #5b6577;
+  --panel: rgba(18, 22, 30, 0.86);
+  --panel-solid: #12161e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-alert: var(--alert);
+  --color-safe: var(--safe);
+  --color-faint: var(--faint);
+  --color-panel: var(--panel);
+  --color-panel-solid: var(--panel-solid);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+      Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+}
+
+/* Drive-mode "you are here" pulsing dot (created imperatively as a marker). */
+.live-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6ea8fe;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 0 rgba(110, 168, 254, 0.5);
+  animation: live-pulse 1.8s infinite;
+}
+@keyframes live-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(110, 168, 254, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(110, 168, 254, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(110, 168, 254, 0);
+  }
+}
+
+/* Glassy floating panel over the map. */
+.glass {
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Thin scrollbars inside panels; reserve gutter so content doesn't shift
+   sideways when the scrollbar appears/disappears as results populate. */
+.scroll-thin {
+  scrollbar-gutter: stable;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+}
