@@ -1,5 +1,4 @@
 import { type ReactNode } from "react";
-import { Link } from "react-router-dom";
 import type { Meta } from "@/lib/types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MetaNote from "@/components/MetaNote";
@@ -18,13 +17,13 @@ export default function Panel({
   mode,
   onMode,
   meta,
-  cityName,
+  citySwitcher,
   children,
 }: {
   mode: Mode;
   onMode: (m: Mode) => void;
   meta: Meta | null;
-  cityName?: string;
+  citySwitcher?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -37,15 +36,7 @@ export default function Panel({
           />
           <h1 className="text-[22px] font-bold tracking-tight">Unwatched</h1>
           <div className="ml-auto flex items-center gap-2">
-            {cityName && (
-              <Link
-                to="/"
-                aria-label="Change city"
-                className="rounded-full border border-border bg-foreground/[0.06] px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
-              >
-                {cityName} ▾
-              </Link>
-            )}
+            {citySwitcher}
             <ThemeToggle />
           </div>
         </div>

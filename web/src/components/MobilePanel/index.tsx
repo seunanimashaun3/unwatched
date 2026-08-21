@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, type ReactNode } from "react";
 import { Drawer } from "vaul";
 import { ChevronDown, Loader2, Navigation2, SlidersHorizontal } from "lucide-react";
 import type { Exposure } from "@/lib/exposure";
@@ -24,7 +23,7 @@ const SNAP_POINTS = [0.2, 0.92];
 export interface MobilePanelProps {
   mode: Mode;
   onMode: (m: Mode) => void;
-  cityName: string;
+  citySwitcher: ReactNode;
   // route
   start: LngLat | null;
   end: LngLat | null;
@@ -78,13 +77,10 @@ export default function MobilePanel(props: MobilePanelProps) {
           <div className="flex items-center gap-2 px-4 pb-2 pt-2.5">
             <span className="size-2.5 rounded-full bg-alert" />
             <span className="text-[15px] font-bold tracking-tight">Unwatched</span>
-            <Link
-              to="/"
-              className="ml-auto rounded-full border border-border bg-foreground/[0.06] px-2.5 py-1 text-[11px] font-semibold text-muted-foreground"
-            >
-              {props.cityName} ▾
-            </Link>
-            <ThemeToggle />
+            <div className="ml-auto flex items-center gap-2">
+              {props.citySwitcher}
+              <ThemeToggle />
+            </div>
           </div>
 
           <div className="scroll-thin min-h-0 flex-1 overflow-y-auto px-4 pb-8" onFocusCapture={expand}>

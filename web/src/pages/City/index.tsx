@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import type { Camera, LngLat, Meta } from "@/lib/types";
+import type { Camera, CityIndexEntry, LngLat, Meta } from "@/lib/types";
 import { computeExposure, type Exposure } from "@/lib/exposure";
 import { fetchCityCameras, fetchCityMeta } from "@/lib/cities";
 import { fmtPoint } from "@/lib/presets";
@@ -21,9 +20,17 @@ import DriveAlert from "@/components/DriveAlert";
 import NavBar from "@/components/NavBar";
 import Legend from "@/components/Legend";
 import LoadingScreen from "@/components/LoadingScreen";
+import CitySwitcher from "@/components/CitySwitcher";
 
-export default function City() {
-  const { slug = "" } = useParams();
+export default function City({
+  slug,
+  cities,
+  onCityChange,
+}: {
+  slug: string;
+  cities: CityIndexEntry[];
+  onCityChange: (slug: string) => void;
+}) {
   const [meta, setMeta] = useState<Meta | null>(null);
   const [cameras, setCameras] = useState<Camera[]>([]);
   const [notFound, setNotFound] = useState(false);
@@ -206,17 +213,19 @@ export default function City() {
     return (
       <div className="absolute inset-0 grid place-items-center bg-background">
         <div className="text-center">
-          <h1 className="mb-1.5 text-3xl font-bold tracking-tight">City not found</h1>
-          <p className="mb-5 text-sm text-muted-foreground">"{slug}" isn't supported yet.</p>
-          <Link className="font-semibold text-safe hover:underline" to="/">
-            ← Back to all cities
-          </Link>
+          <h1 className="mb-1.5 text-3xl font-bold tracking-tight">Couldn't load {slug}</h1>
+          <p className="mb-5 text-sm text-muted-foreground">Pick another city:</p>
+          <div className="flex justify-center">
+            <CitySwitcher cities={cities} slug={slug} onChange={onCityChange} />
+          </div>
         </div>
       </div>
     );
   }
 
   if (!meta) return <LoadingScreen label="Loading city…" />;
+
+  const citySwitcher = <CitySwitcher cities={cities} slug={slug} onChange={onCityChange} />;
 
   // live driving readouts
   const liveFix = driveMode ? (geo.fix?.point ?? null) : null;
@@ -274,7 +283,7 @@ export default function City() {
           <MobilePanel
             mode={mode}
             onMode={switchMode}
-            cityName={`${meta.city}, ${meta.state}`}
+            citySwitcher={citySwitcher}
             start={start}
             end={end}
             startLabel={startLabel}
@@ -299,7 +308,7 @@ export default function City() {
             exposure={exposure}
           />
         ) : (
-          <Panel mode={mode} onMode={switchMode} meta={meta} cityName={`${meta.city}, ${meta.state}`}>
+          <Panel mode={mode} onMode={switchMode} meta={meta} citySwitcher={citySwitcher}>
             <DriveControls
               locating={locating}
               driveMode={driveMode}

@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
-import type { ReactNode } from "react";
 import Panel from "@/components/Panel";
 import type { Meta } from "@/lib/types";
 
@@ -19,11 +17,9 @@ const META: Meta = {
   counts: { nodes: 45482, edges: 54842, cameras: 1907, alpr: 526, flock: 483, watchedEdges: 5626 },
 };
 
-const wrap = (ui: ReactNode) => render(<MemoryRouter>{ui}</MemoryRouter>);
-
 describe("Panel", () => {
   it("renders the brand and the active mode's tagline", () => {
-    wrap(
+    render(
       <Panel mode="route" onMode={vi.fn()} meta={META}>
         <div>body</div>
       </Panel>,
@@ -33,7 +29,7 @@ describe("Panel", () => {
   });
 
   it("marks the current mode tab as selected", () => {
-    wrap(
+    render(
       <Panel mode="exposure" onMode={vi.fn()} meta={META}>
         <div />
       </Panel>,
@@ -43,7 +39,7 @@ describe("Panel", () => {
 
   it("switches mode when the other tab is clicked", async () => {
     const onMode = vi.fn();
-    wrap(
+    render(
       <Panel mode="route" onMode={onMode} meta={META}>
         <div />
       </Panel>,
@@ -52,19 +48,17 @@ describe("Panel", () => {
     expect(onMode).toHaveBeenCalledWith("exposure");
   });
 
-  it("shows a city switcher link back to the home page when a city is given", () => {
-    wrap(
-      <Panel mode="route" onMode={vi.fn()} meta={META} cityName="San Francisco, CA">
+  it("renders the city switcher slot", () => {
+    render(
+      <Panel mode="route" onMode={vi.fn()} meta={META} citySwitcher={<button>Switch</button>}>
         <div />
       </Panel>,
     );
-    const link = screen.getByRole("link", { name: /change city/i });
-    expect(link).toHaveAttribute("href", "/");
-    expect(link.textContent).toMatch(/San Francisco, CA/);
+    expect(screen.getByRole("button", { name: "Switch" })).toBeInTheDocument();
   });
 
   it("surfaces the data provenance and the incompleteness caveat", () => {
-    wrap(
+    render(
       <Panel mode="route" onMode={vi.fn()} meta={META}>
         <div />
       </Panel>,
