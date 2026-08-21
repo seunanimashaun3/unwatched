@@ -26,7 +26,7 @@ export default function DriveControls({
   onStart: () => void;
 }) {
   return (
-    <div className="mb-4 rounded-xl border border-border bg-white/[0.02] p-3">
+    <div className="mb-4 rounded-xl border border-border bg-foreground/[0.02] p-3">
       <div className="flex items-center gap-2">
         <Button variant="outline" size="sm" className="gap-1.5" onClick={onLocate} disabled={locating}>
           {locating ? <Loader2 className="size-3.5 animate-spin" /> : <LocateFixed className="size-3.5" />}

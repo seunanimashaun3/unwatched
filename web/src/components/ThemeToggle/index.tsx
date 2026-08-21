@@ -10,7 +10,7 @@ export default function ThemeToggle({ className }: { className?: string }) {
       onClick={toggle}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       className={cn(
-        "grid size-8 place-items-center rounded-full border border-border bg-white/[0.06] text-muted-foreground transition-colors hover:border-ring hover:text-foreground",
+        "grid size-8 place-items-center rounded-full border border-border bg-foreground/[0.06] text-muted-foreground transition-colors hover:border-ring hover:text-foreground",
         className,
       )}
     >

@@ -19,8 +19,8 @@ export function Verdict({
       className={cn(
         "mt-3 rounded-lg border p-3 text-[12.5px] leading-relaxed",
         tone === "win"
-          ? "border-safe/25 bg-safe/10 text-[#cffbe9] [&_b]:text-white"
-          : "border-border bg-white/[0.04] text-muted-foreground",
+          ? "border-safe/30 bg-safe/10 text-foreground [&_b]:text-foreground [&_b]:font-bold"
+          : "border-border bg-foreground/[0.04] text-muted-foreground",
       )}
     >
       {children}

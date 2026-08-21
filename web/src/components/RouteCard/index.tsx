@@ -30,7 +30,7 @@ export default function RouteCard({
     <Card
       className={cn(
         "p-3.5",
-        kind === "priv" ? "border-safe/40 bg-safe/[0.06]" : "bg-white/[0.02]",
+        kind === "priv" ? "border-safe/40 bg-safe/[0.06]" : "bg-foreground/[0.02]",
       )}
     >
       <div className="mb-2.5 flex items-center gap-2">

@@ -5,53 +5,54 @@
 /* Unwatched dark identity, mapped onto shadcn's semantic tokens.      */
 /* Red = surveillance, green = the safe/least-watched route.           */
 /* ------------------------------------------------------------------ */
-/* Light is the default; add `.dark` on <html> for dark. */
+/* Light is the default; add `.dark` on <html> for dark. Neutral (zinc) tones
+   in both so text contrast is correct and dark mode is a true neutral dark. */
 :root {
   --radius: 0.75rem;
 
-  --background: #eef1f5;
-  --foreground: #14181f;
+  --background: #f4f4f5; /* zinc-100 */
+  --foreground: #18181b; /* zinc-900 */
   --card: rgba(255, 255, 255, 0.92);
-  --card-foreground: #14181f;
+  --card-foreground: #18181b;
   --popover: #ffffff;
-  --popover-foreground: #14181f;
-  --primary: #059669;
+  --popover-foreground: #18181b;
+  --primary: #059669; /* emerald-600 */
   --primary-foreground: #ffffff;
-  --secondary: #e7eaef;
-  --secondary-foreground: #14181f;
-  --muted: #e9ecf1;
-  --muted-foreground: #5b6472;
-  --accent: #e3e7ee;
-  --accent-foreground: #14181f;
-  --destructive: #e5352f;
+  --secondary: #e4e4e7;
+  --secondary-foreground: #18181b;
+  --muted: #e8e8ea;
+  --muted-foreground: #52525b; /* zinc-600 */
+  --accent: #e4e4e7;
+  --accent-foreground: #18181b;
+  --destructive: #dc2626; /* red-600 */
   --destructive-foreground: #ffffff;
-  --border: rgba(20, 24, 31, 0.12);
-  --input: rgba(20, 24, 31, 0.18);
+  --border: rgba(24, 24, 27, 0.12);
+  --input: rgba(24, 24, 27, 0.18);
   --ring: #3b82f6;
 
   /* domain-specific */
-  --alert: #e5352f;
+  --alert: #dc2626;
   --safe: #059669;
-  --faint: #98a0ae;
+  --faint: #a1a1aa; /* zinc-400 */
   --panel: rgba(255, 255, 255, 0.82);
   --panel-solid: #ffffff;
 }
 
 .dark {
-  --background: #0b0e13;
-  --foreground: #eef1f6;
-  --card: rgba(18, 22, 30, 0.86);
-  --card-foreground: #eef1f6;
-  --popover: #12161e;
-  --popover-foreground: #eef1f6;
+  --background: #09090b; /* zinc-950 */
+  --foreground: #fafafa; /* zinc-50 */
+  --card: rgba(24, 24, 27, 0.86); /* zinc-900 */
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
   --primary: #35e0a1;
   --primary-foreground: #05070a;
-  --secondary: #1a1f29;
-  --secondary-foreground: #eef1f6;
-  --muted: #171c25;
-  --muted-foreground: #8b95a7;
-  --accent: #232a36;
-  --accent-foreground: #eef1f6;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #1c1c1f;
+  --muted-foreground: #a1a1aa; /* zinc-400 */
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
   --destructive: #ff4d5e;
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.10);
@@ -60,9 +61,9 @@
 
   --alert: #ff4d5e;
   --safe: #35e0a1;
-  --faint: #5b6577;
-  --panel: rgba(18, 22, 30, 0.86);
-  --panel-solid: #12161e;
+  --faint: #71717a; /* zinc-500 */
+  --panel: rgba(20, 20, 23, 0.86);
+  --panel-solid: #18181b;
 }
 
 @theme inline {

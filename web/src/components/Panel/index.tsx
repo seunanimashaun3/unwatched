@@ -46,7 +46,7 @@ export default function Panel({
           <Link
             to="/"
             aria-label="Change city"
-            className="rounded-full border border-border bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
+            className="rounded-full border border-border bg-foreground/[0.06] px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
           >
             {cityName} ▾
           </Link>
@@ -83,7 +83,7 @@ export default function Panel({
       >
         <Drawer.Portal>
           <Drawer.Content className="glass fixed inset-x-0 bottom-0 z-20 mx-auto flex h-full max-h-[94dvh] flex-col rounded-t-2xl border-t border-border shadow-2xl outline-none">
-            <Drawer.Handle className="!mt-3 !h-1.5 !w-10 !bg-white/25" />
+            <Drawer.Handle className="!mt-3 !h-1.5 !w-10 !bg-foreground/25" />
             <Drawer.Title className="sr-only">Route planner</Drawer.Title>
             <div className="px-4 pb-2.5 pt-3">{brand}</div>
             <div
