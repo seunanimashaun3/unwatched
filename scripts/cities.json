@@ -1,0 +1,203 @@
+{
+  "san-francisco-ca": {
+    "name": "San Francisco",
+    "state": "CA",
+    "bbox": [
+      -122.52,
+      37.7,
+      -122.35,
+      37.83
+    ],
+    "center": [
+      -122.4194,
+      37.7649
+    ],
+    "zoom": 12.4,
+    "presets": [
+      {
+        "label": "Mission \u2192 Marina",
+        "a": [
+          -122.4194,
+          37.7599
+        ],
+        "b": [
+          -122.4368,
+          37.803
+        ]
+      },
+      {
+        "label": "Downtown \u2192 Sunset",
+        "a": [
+          -122.4058,
+          37.7887
+        ],
+        "b": [
+          -122.4944,
+          37.7558
+        ]
+      },
+      {
+        "label": "Castro \u2192 Bayview",
+        "a": [
+          -122.435,
+          37.7609
+        ],
+        "b": [
+          -122.39,
+          37.735
+        ]
+      }
+    ]
+  },
+  "new-york-ny": {
+    "name": "New York",
+    "state": "NY",
+    "bbox": [
+      -74.02,
+      40.7,
+      -73.9,
+      40.82
+    ],
+    "center": [
+      -73.98,
+      40.758
+    ],
+    "zoom": 12.0,
+    "presets": []
+  },
+  "atlanta-ga": {
+    "name": "Atlanta",
+    "state": "GA",
+    "bbox": [
+      -84.46,
+      33.7,
+      -84.32,
+      33.82
+    ],
+    "center": [
+      -84.388,
+      33.749
+    ],
+    "zoom": 11.8,
+    "presets": []
+  },
+  "chicago-il": {
+    "name": "Chicago",
+    "state": "IL",
+    "bbox": [
+      -87.72,
+      41.82,
+      -87.58,
+      41.96
+    ],
+    "center": [
+      -87.63,
+      41.885
+    ],
+    "zoom": 11.6,
+    "presets": []
+  },
+  "san-jose-ca": {
+    "name": "San Jose",
+    "state": "CA",
+    "bbox": [
+      -122.02,
+      37.25,
+      -121.8,
+      37.44
+    ],
+    "center": [
+      -121.886,
+      37.338
+    ],
+    "zoom": 11.4,
+    "presets": []
+  },
+  "norfolk-va": {
+    "name": "Norfolk",
+    "state": "VA",
+    "bbox": [
+      -76.35,
+      36.82,
+      -76.17,
+      36.95
+    ],
+    "center": [
+      -76.285,
+      36.885
+    ],
+    "zoom": 12.0,
+    "presets": []
+  },
+  "virginia-beach-va": {
+    "name": "Virginia Beach",
+    "state": "VA",
+    "bbox": [
+      -76.1,
+      36.7,
+      -75.9,
+      36.9
+    ],
+    "center": [
+      -76.05,
+      36.84
+    ],
+    "zoom": 11.3,
+    "presets": []
+  },
+  "nashville-tn": {
+    "name": "Nashville",
+    "state": "TN",
+    "bbox": [
+      -86.86,
+      36.09,
+      -86.24,
+      36.28
+    ],
+    "center": [
+      -86.55,
+      36.185
+    ],
+    "zoom": 10.4,
+    "presets": [
+      {
+        "label": "Lebanon \u2192 Nashville",
+        "a": [
+          -86.2911,
+          36.2081
+        ],
+        "b": [
+          -86.7816,
+          36.1627
+        ]
+      },
+      {
+        "label": "Mt. Juliet \u2192 Downtown",
+        "a": [
+          -86.5186,
+          36.2009
+        ],
+        "b": [
+          -86.7816,
+          36.1627
+        ]
+      }
+    ]
+  },
+  "las-vegas-nv": {
+    "name": "Las Vegas",
+    "state": "NV",
+    "bbox": [
+      -115.28,
+      36.06,
+      -115.05,
+      36.23
+    ],
+    "center": [
+      -115.16,
+      36.145
+    ],
+    "zoom": 11.2,
+    "presets": []
+  }
+}

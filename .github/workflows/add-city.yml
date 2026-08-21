@@ -1,0 +1,68 @@
+name: Add a city
+
+# Manually add a supported city: Actions -> "Add a city" -> Run workflow.
+# It geocodes, checks camera coverage + size, builds the graph, and commits —
+# which triggers Render to deploy. No local setup needed.
+on:
+  workflow_dispatch:
+    inputs:
+      city:
+        description: 'City, State — e.g. "Austin, TX"'
+        required: true
+        type: string
+      bbox:
+        description: '(optional) bounding box "W,S,E,N" — blank = auto-derive from the city center'
+        required: false
+        type: string
+      radius_km:
+        description: '(optional) half-width of the auto box in km'
+        required: false
+        default: "8"
+        type: string
+      force:
+        description: "bypass coverage/size guardrails (for vetted large metros)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+# serialize registry-mutating runs so cities.json never collides
+concurrency:
+  group: city-registry
+  cancel-in-progress: false
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Add city
+        env:
+          CITY: ${{ inputs.city }}
+          BBOX: ${{ inputs.bbox }}
+          RADIUS: ${{ inputs.radius_km }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          args=(--name "$CITY" --radius-km "$RADIUS")
+          [ -n "$BBOX" ] && args+=(--bbox="$BBOX")
+          [ "$FORCE" = "true" ] && args+=(--force)
+          python scripts/add_city.py "${args[@]}"
+
+      - name: Commit & deploy
+        run: |
+          git config user.name "unwatched-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add scripts/cities.json web/public/data
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Add city: ${{ inputs.city }}"
+            git push
+          fi
