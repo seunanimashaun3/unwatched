@@ -21,6 +21,12 @@ from cities import get_city
 
 ROOT = Path(__file__).resolve().parent.parent
 SEE_RADIUS_M = 30.0
+# A camera with a known facing direction only "sees" a road if the road lies
+# within this many degrees of where the camera points. 100° keeps the whole
+# front hemisphere (plus margin) and only drops roads clearly *behind* the
+# camera — conservative on purpose, so we never under-warn. Cameras with no
+# direction tag are always counted.
+FOV_HALF_DEG = 100.0
 
 CLASS_SPEED_KMH = {
     "motorway": 90, "trunk": 70, "primary": 50, "secondary": 45,
@@ -178,7 +184,8 @@ def largest_component(n_nodes, edges):
     return best
 
 
-def point_seg_dist_m(p, a, b):
+def point_seg_nearest(p, a, b):
+    """Return (distance_m, nearest_point[lon,lat]) from p to segment a-b."""
     lat0 = math.radians(p[1])
     mx = 111320 * math.cos(lat0)
     my = 110540
@@ -187,9 +194,38 @@ def point_seg_dist_m(p, a, b):
     bx, by = b[0] * mx, b[1] * my
     dx, dy = bx - ax, by - ay
     if dx == 0 and dy == 0:
-        return math.hypot(px - ax, py - ay)
-    t = max(0, min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)))
-    return math.hypot(px - (ax + t * dx), py - (ay + t * dy))
+        t = 0.0
+    else:
+        t = max(0, min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)))
+    cx, cy = ax + t * dx, ay + t * dy
+    return math.hypot(px - cx, py - cy), [cx / mx, cy / my]
+
+
+def point_seg_dist_m(p, a, b):
+    return point_seg_nearest(p, a, b)[0]
+
+
+def bearing(a, b):
+    """Initial compass bearing from a to b, degrees (0-360, N=0)."""
+    lat1, lat2 = math.radians(a[1]), math.radians(b[1])
+    dlon = math.radians(b[0] - a[0])
+    y = math.sin(dlon) * math.cos(lat2)
+    x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dlon)
+    return (math.degrees(math.atan2(y, x)) + 360) % 360
+
+
+def angle_diff(a, b):
+    """Smallest absolute difference between two bearings, degrees (0-180)."""
+    d = abs(a - b) % 360
+    return d if d <= 180 else 360 - d
+
+
+def camera_sees(cam, nearest_pt):
+    """Does the camera face the road point? True if no direction data (safe)."""
+    d = cam.get("direction")
+    if d is None:
+        return True
+    return angle_diff(bearing([cam["lon"], cam["lat"]], nearest_pt), d) <= FOV_HALF_DEG
 
 
 def assign_cameras(edges, cameras):
@@ -201,20 +237,27 @@ def assign_cameras(edges, cameras):
     edge_cams = [[] for _ in edges]
     for ei, e in enumerate(edges):
         geom = e[6]
-        checked = set()
+        # gather candidate cameras near any sub-segment of this edge
+        cand = set()
         for k in range(1, len(geom)):
             a, b = geom[k - 1], geom[k]
-            mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
-            gx, gy = round(mid[0] / cell), round(mid[1] / cell)
+            gx, gy = round((a[0] + b[0]) / 2 / cell), round((a[1] + b[1]) / 2 / cell)
             for dx in (-1, 0, 1):
                 for dy in (-1, 0, 1):
-                    for ci in grid.get((gx + dx, gy + dy), ()):
-                        if ci in checked:
-                            continue
-                        cam = cameras[ci]
-                        if point_seg_dist_m([cam["lon"], cam["lat"]], a, b) <= SEE_RADIUS_M:
-                            checked.add(ci)
-        edge_cams[ei] = sorted(checked)
+                    cand.update(grid.get((gx + dx, gy + dy), ()))
+        kept = []
+        for ci in cand:
+            cam = cameras[ci]
+            cp = [cam["lon"], cam["lat"]]
+            best_d, best_pt = SEE_RADIUS_M + 1, None
+            for k in range(1, len(geom)):
+                d, pt = point_seg_nearest(cp, geom[k - 1], geom[k])
+                if d < best_d:
+                    best_d, best_pt = d, pt
+            # within range AND actually facing this stretch of road
+            if best_d <= SEE_RADIUS_M and camera_sees(cam, best_pt):
+                kept.append(ci)
+        edge_cams[ei] = sorted(kept)
     return edge_cams
 
 

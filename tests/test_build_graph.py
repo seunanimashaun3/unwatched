@@ -120,3 +120,68 @@ class TestLargestComponent:
         ]
         keep = bg.largest_component(3, edges)
         assert keep == {0, 1, 2}
+
+
+class TestBearing:
+    def test_cardinal_directions(self):
+        assert bg.bearing([0, 0], [0, 1]) == 0        # north
+        assert round(bg.bearing([0, 0], [1, 0])) == 90   # east
+        assert bg.bearing([0, 0], [0, -1]) == 180     # south
+        assert round(bg.bearing([0, 0], [-1, 0])) == 270  # west
+
+
+class TestAngleDiff:
+    def test_basic(self):
+        assert bg.angle_diff(90, 90) == 0
+        assert bg.angle_diff(0, 180) == 180
+
+    def test_wraparound(self):
+        assert bg.angle_diff(10, 350) == 20
+        assert bg.angle_diff(350, 10) == 20
+
+
+class TestPointSegNearest:
+    def test_returns_point_on_segment(self):
+        d, pt = bg.point_seg_nearest([0.0005, 0.0002], [0, 0], [0.001, 0])
+        assert d < 30  # ~22 m north of the road
+        assert abs(pt[0] - 0.0005) < 1e-4
+        assert abs(pt[1]) < 1e-5  # nearest point is on the (y=0) road
+
+
+class TestCameraSees:
+    # a west->east road at y=0; camera ~22 m north of its middle
+    ROAD_PT = [0.0005, 0.0]
+    CAM = {"lon": 0.0005, "lat": 0.0002}
+
+    def test_no_direction_always_sees(self):
+        assert bg.camera_sees({**self.CAM, "direction": None}, self.ROAD_PT) is True
+
+    def test_facing_toward_road_sees(self):
+        # camera points south (180) toward the road -> sees it
+        assert bg.camera_sees({**self.CAM, "direction": 180}, self.ROAD_PT) is True
+
+    def test_facing_away_does_not_see(self):
+        # camera points north (0), road is behind it -> does not see
+        assert bg.camera_sees({**self.CAM, "direction": 0}, self.ROAD_PT) is False
+
+
+class TestAssignCamerasDirectional:
+    def _edge(self):
+        # [u, v, dist, time10, class, oneway, geom] — a west->east road at y=0
+        return [0, 1, 111, 80, 3, 0, [[0.0, 0.0], [0.001, 0.0]]]
+
+    def test_camera_facing_road_is_assigned(self):
+        cams = [{"lon": 0.0005, "lat": 0.0002, "direction": 180}]  # faces south, toward road
+        assert bg.assign_cameras([self._edge()], cams) == [[0]]
+
+    def test_camera_facing_away_is_not_assigned(self):
+        cams = [{"lon": 0.0005, "lat": 0.0002, "direction": 0}]  # faces north, away
+        assert bg.assign_cameras([self._edge()], cams) == [[]]
+
+    def test_camera_without_direction_is_assigned(self):
+        cams = [{"lon": 0.0005, "lat": 0.0002, "direction": None}]
+        assert bg.assign_cameras([self._edge()], cams) == [[0]]
+
+    def test_far_camera_ignored_regardless_of_facing(self):
+        cams = [{"lon": 0.0005, "lat": 0.01, "direction": 180}]  # ~1.1 km away
+        assert bg.assign_cameras([self._edge()], cams) == [[]]
