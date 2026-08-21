@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { Drawer } from "vaul";
 import type { Meta } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MetaNote from "@/components/MetaNote";
 
@@ -13,6 +13,9 @@ const TAGLINE: Record<Mode, string> = {
     "Plan a drive that steers around license-plate cameras. See exactly who logs you — and what it costs to avoid them.",
   exposure: "Tap anywhere to see how heavily surveilled that spot is.",
 };
+
+// peek (map-dominant) · half · full
+const SNAP_POINTS = [0.2, 0.55, 0.94];
 
 export default function Panel({
   mode,
@@ -27,76 +30,82 @@ export default function Panel({
   cityName?: string;
   children: ReactNode;
 }) {
-  // Collapse only affects the mobile bottom sheet; desktop always shows content.
-  const [collapsed, setCollapsed] = useState(false);
+  const isMobile = useIsMobile();
+  const [snap, setSnap] = useState<number | string | null>(SNAP_POINTS[0]);
 
-  return (
-    <div
-      className={cn(
-        "glass scroll-thin fixed z-10 overflow-y-auto border-border shadow-2xl",
-        // mobile: short bottom sheet so the map stays visible; collapses to a peek
-        "inset-x-0 bottom-0 rounded-t-2xl border-t",
-        !collapsed && "max-h-[52dvh]",
-        // desktop: floating card, top-left (collapse doesn't apply)
-        "sm:inset-x-auto sm:bottom-auto sm:left-4 sm:top-4 sm:max-h-[calc(100dvh-2rem)] sm:w-[372px] sm:max-w-[calc(100vw-2rem)] sm:rounded-2xl sm:border",
+  const brand = (
+    <div className="flex items-center gap-2.5">
+      <span
+        className="size-2.5 shrink-0 rounded-full bg-alert"
+        style={{ boxShadow: "0 0 0 4px rgba(255,77,94,0.18)" }}
+      />
+      <h1 className="text-[22px] font-bold tracking-tight">Unwatched</h1>
+      {cityName && (
+        <Link
+          to="/"
+          aria-label="Change city"
+          className="ml-auto rounded-full border border-border bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
+        >
+          {cityName} ▾
+        </Link>
       )}
-    >
-      {/* grab handle — mobile only, taps to collapse/expand */}
-      <button
-        type="button"
-        className="sticky top-0 z-10 flex w-full justify-center bg-transparent py-2 sm:hidden"
-        aria-label={collapsed ? "Expand panel" : "Collapse panel"}
-        aria-expanded={!collapsed}
-        onClick={() => setCollapsed((c) => !c)}
+    </div>
+  );
+
+  const modeTabs = (
+    <Tabs value={mode} onValueChange={(v) => onMode(v as Mode)} className="mb-4">
+      <TabsList aria-label="Mode">
+        <TabsTrigger value="route">Plan a route</TabsTrigger>
+        <TabsTrigger value="exposure">Exposure score</TabsTrigger>
+      </TabsList>
+    </Tabs>
+  );
+
+  // ---------- mobile: draggable snap-point bottom sheet ----------
+  if (isMobile) {
+    // expand when the user taps into a control so it isn't hidden below the fold
+    const expandIfPeek = () => {
+      if (snap === SNAP_POINTS[0]) setSnap(SNAP_POINTS[1]);
+    };
+    return (
+      <Drawer.Root
+        open
+        modal={false}
+        dismissible={false}
+        snapPoints={SNAP_POINTS}
+        activeSnapPoint={snap}
+        setActiveSnapPoint={setSnap}
       >
-        <span className="h-1 w-9 rounded-full bg-white/25" />
-      </button>
-
-      <div className="px-[18px] pb-5 pt-1 sm:pt-[18px]">
-        <div className="flex items-baseline gap-2.5">
-          <span
-            className="size-2.5 self-center rounded-full bg-alert"
-            style={{ boxShadow: "0 0 0 4px rgba(255,77,94,0.18)" }}
-          />
-          <h1 className="text-[22px] font-bold tracking-tight">Unwatched</h1>
-          {cityName && (
-            <Link
-              to="/"
-              aria-label="Change city"
-              className="ml-auto self-center rounded-full border border-border bg-white/[0.06] px-2.5 py-[3px] text-xs font-semibold text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
+        <Drawer.Portal>
+          <Drawer.Content className="glass fixed inset-x-0 bottom-0 z-20 mx-auto flex h-full max-h-[94dvh] flex-col rounded-t-2xl border-t border-border shadow-2xl outline-none">
+            <Drawer.Handle className="!mt-3 !h-1.5 !w-10 !bg-white/25" />
+            <Drawer.Title className="sr-only">Route planner</Drawer.Title>
+            <div className="px-4 pb-2.5 pt-3">{brand}</div>
+            <div
+              className="scroll-thin min-h-0 flex-1 overflow-y-auto px-4 pb-8"
+              onFocusCapture={expandIfPeek}
             >
-              {cityName} ▾
-            </Link>
-          )}
-          {/* mobile collapse chevron */}
-          <button
-            type="button"
-            className={cn("ml-1 self-center text-muted-foreground transition-transform sm:hidden", !collapsed && "rotate-180")}
-            aria-label={collapsed ? "Expand panel" : "Collapse panel"}
-            onClick={() => setCollapsed((c) => !c)}
-          >
-            <ChevronDown className="size-4" />
-          </button>
-        </div>
+              {modeTabs}
+              {children}
+              <MetaNote meta={meta} />
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    );
+  }
 
-        {/* collapsible on mobile; always visible on desktop */}
-        <div className={cn(collapsed ? "hidden sm:block" : "block")}>
-          {/* tagline is desktop-only to save vertical space on phones */}
-          <p className="mb-3.5 mt-1.5 hidden text-[12.5px] leading-normal text-muted-foreground sm:block">
-            {TAGLINE[mode]}
-          </p>
-
-          <Tabs value={mode} onValueChange={(v) => onMode(v as Mode)} className="mb-4 mt-3 sm:mt-0">
-            <TabsList aria-label="Mode">
-              <TabsTrigger value="route">Plan a route</TabsTrigger>
-              <TabsTrigger value="exposure">Exposure score</TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {children}
-
-          <MetaNote meta={meta} />
-        </div>
+  // ---------- desktop: floating card, top-left ----------
+  return (
+    <div className="glass scroll-thin fixed left-4 top-4 z-10 max-h-[calc(100dvh-2rem)] w-[372px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl border border-border shadow-2xl">
+      <div className="px-[18px] pb-5 pt-[18px]">
+        {brand}
+        <p className="mb-3.5 mt-2 text-[12.5px] leading-normal text-muted-foreground">
+          {TAGLINE[mode]}
+        </p>
+        {modeTabs}
+        {children}
+        <MetaNote meta={meta} />
       </div>
     </div>
   );

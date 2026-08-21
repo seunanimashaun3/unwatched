@@ -81,7 +81,22 @@ export default function RoutePanel({
         </div>
       )}
 
-      <div className="my-4">
+      {/* results first — the payoff — then the fine-tuning controls below */}
+      {routing && (
+        <Verdict>
+          <Loader2 className="mr-1.5 inline size-3.5 animate-spin align-[-2px] text-safe" aria-hidden="true" />
+          Finding the least-watched route…
+        </Verdict>
+      )}
+
+      {!routing && result && !result.ok && <Verdict role="alert">{result.reason}</Verdict>}
+
+      {!routing && result?.ok && result.fast && result.private && (
+        <Results fast={result.fast} priv={result.private} />
+      )}
+
+      <div className="mt-5">
+        <SectionLabel>Fine-tune</SectionLabel>
         <div className="mb-2 flex items-baseline justify-between">
           <span className="text-[12.5px] font-semibold">Detour tolerance</span>
           <span className="text-[11px] text-muted-foreground">{detourLabel(penaltyS)}</span>
@@ -94,32 +109,17 @@ export default function RoutePanel({
           value={[penaltyS]}
           onValueChange={(v) => setPenaltyS(v[0])}
         />
+
+        <div className="mt-4 flex items-center gap-2.5">
+          <Switch id="alpr-only" checked={alprOnly} onCheckedChange={setAlprOnly} />
+          <Label htmlFor="alpr-only" className="cursor-pointer text-[12.5px] font-normal text-muted-foreground">
+            Only avoid license-plate readers (ALPR), not all cameras
+          </Label>
+        </div>
       </div>
-
-      <div className="mb-3.5 flex items-center gap-2.5">
-        <Switch id="alpr-only" checked={alprOnly} onCheckedChange={setAlprOnly} />
-        <Label htmlFor="alpr-only" className="cursor-pointer text-[12.5px] font-normal text-muted-foreground">
-          Only avoid license-plate readers (ALPR), not all cameras
-        </Label>
-      </div>
-
-      {routing && (
-        <Verdict>
-          <Loader2 className="mr-1.5 inline size-3.5 animate-spin align-[-2px] text-safe" aria-hidden="true" />
-          Finding the least-watched route…
-        </Verdict>
-      )}
-
-      {!routing && result && !result.ok && (
-        <Verdict role="alert">{result.reason}</Verdict>
-      )}
-
-      {!routing && result?.ok && result.fast && result.private && (
-        <Results fast={result.fast} priv={result.private} />
-      )}
 
       {(start || end) && (
-        <Button variant="outline" className="mt-2.5 w-full" onClick={reset}>
+        <Button variant="outline" className="mt-4 h-11 w-full sm:h-9" onClick={reset}>
           Clear route
         </Button>
       )}

@@ -62,9 +62,9 @@ export default function SearchBox({
   }
 
   return (
-    <div className="relative mb-2 flex items-center gap-2.5">
+    <div className="relative mb-2.5 flex items-center gap-2.5">
       <span
-        className="grid size-[22px] shrink-0 place-items-center rounded-full text-xs font-bold text-[#05070a]"
+        className="grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold text-[#05070a] sm:size-[22px]"
         style={{ background: kind === "a" ? "#ffffff" : "#35e0a1" }}
       >
         {kind.toUpperCase()}
@@ -72,9 +72,9 @@ export default function SearchBox({
       <div className="relative min-w-0 flex-1">
         <Input
           value={shown}
-          placeholder={armed ? "Search an address, or click the map…" : label}
+          placeholder={armed ? "Search an address, or tap the map…" : label}
           aria-label={label}
-          className={cn(armed && "border-ring ring-2 ring-ring/40")}
+          className={cn("h-11 text-[15px] sm:h-9 sm:text-sm", armed && "border-ring ring-2 ring-ring/40")}
           onFocus={() => {
             setFocused(true);
             setQuery(valueLabel ?? "");
@@ -104,7 +104,7 @@ export default function SearchBox({
               <li
                 key={r.label + i}
                 className={cn(
-                  "cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2.5 py-2 text-[12.5px]",
+                  "cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap rounded-md px-2.5 py-3 text-sm sm:py-2 sm:text-[12.5px]",
                   i === active && "bg-accent",
                 )}
                 onMouseEnter={() => setActive(i)}
