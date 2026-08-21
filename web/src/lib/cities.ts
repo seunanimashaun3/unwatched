@@ -23,6 +23,5 @@ export async function fetchCityCameras(slug: string): Promise<CameraData> {
   return r.json();
 }
 
-/** "Request a city" link. Set this to a Google Form / Tally URL to collect
- *  requests without exposing a personal email. Empty = hide the affordance. */
-export const REQUEST_CITY_URL = "";
+/** "Request a city" link (Google Form). Empty string hides the affordance. */
+export const REQUEST_CITY_URL = "https://forms.gle/qnJQMm86nSPs3Cmi9";
