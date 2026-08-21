@@ -1,0 +1,50 @@
+{
+  "slug": "norfolk-va",
+  "city": "Norfolk",
+  "state": "VA",
+  "center": [
+    -76.285,
+    36.885
+  ],
+  "zoom": 12.0,
+  "bbox": [
+    -76.35,
+    36.82,
+    -76.17,
+    36.95
+  ],
+  "presets": [
+    {
+      "label": "West \u2194 East",
+      "a": [
+        -76.319858,
+        36.882774
+      ],
+      "b": [
+        -76.196652,
+        36.885315
+      ]
+    },
+    {
+      "label": "South \u2194 North",
+      "a": [
+        -76.259813,
+        36.841516
+      ],
+      "b": [
+        -76.260992,
+        36.931486
+      ]
+    }
+  ],
+  "overtureRelease": "2026-07-22.0",
+  "cameraSource": "DeFlock / OpenStreetMap (crowdsourced, incomplete lower bound)",
+  "counts": {
+    "nodes": 43270,
+    "edges": 57486,
+    "cameras": 304,
+    "alpr": 303,
+    "flock": 280,
+    "watchedEdges": 1831
+  }
+}

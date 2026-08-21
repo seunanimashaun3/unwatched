@@ -102,10 +102,11 @@ python -m pytest -q                        # 83: pipeline helpers + data contrac
 
 ## Deploy
 
-Static build → any static host, HTTPS required (for geolocation / Drive mode).
+Static build → any static host, HTTPS required (for geolocation / Drive mode). Deployed on **Render** as a static site (see `render.yaml`):
 
-- **Render (recommended):** `render.yaml` is included — in Render, *New → Blueprint*, connect the repo. It builds `web/` and serves `web/dist` at the root domain over HTTPS, with a `/* → /index.html` rewrite so deep links like `/san-jose-ca` resolve client-side.
-- **GitHub Pages:** `.github/workflows/deploy.yml` builds with `BASE_PATH=/unwatched/` and publishes `web/dist`; `404.html` mirrors `index.html` for deep links.
+- Render → *New → Static Site*, connect the repo.
+- **Root Directory** `web`, **Build Command** `npm install && npm run build`, **Publish Directory** `dist`.
+- Add a rewrite (Source `/*` → Destination `/index.html`, Action *Rewrite*) so deep links like `/norfolk-va` resolve client-side. The build also ships a `404.html` copy of the app as a fallback.
 
 ## Data & credits
 

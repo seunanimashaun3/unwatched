@@ -56,6 +56,22 @@ CITIES = {
         "zoom": 11.4,
         "presets": [],
     },
+    "norfolk-va": {
+        "name": "Norfolk",
+        "state": "VA",
+        "bbox": (-76.35, 36.82, -76.17, 36.95),
+        "center": [-76.285, 36.885],
+        "zoom": 12.0,
+        "presets": [],
+    },
+    "virginia-beach-va": {
+        "name": "Virginia Beach",
+        "state": "VA",
+        "bbox": (-76.10, 36.70, -75.90, 36.90),
+        "center": [-76.05, 36.84],
+        "zoom": 11.3,
+        "presets": [],
+    },
 }
 
 

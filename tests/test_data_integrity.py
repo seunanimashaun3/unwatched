@@ -73,8 +73,10 @@ def test_edge_geometry_refs_are_valid(city):
 
 
 def test_alpr_is_a_nonempty_subset_of_all_cameras(city):
+    # every camera can be an ALPR (e.g. Virginia Beach has no generic CCTV
+    # mapped), so ALPR count may equal — but never exceed — the total.
     alpr = [c for c in city["cameras"]["cameras"] if c[2] == 1]
-    assert 0 < len(alpr) < len(city["cameras"]["cameras"])
+    assert 0 < len(alpr) <= len(city["cameras"]["cameras"])
 
 
 def test_meta_counts_match_actual_data(city):

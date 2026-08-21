@@ -74,6 +74,36 @@
         "cameras": 654,
         "flock": 42
       }
+    },
+    {
+      "slug": "norfolk-va",
+      "city": "Norfolk",
+      "state": "VA",
+      "center": [
+        -76.285,
+        36.885
+      ],
+      "zoom": 12.0,
+      "counts": {
+        "alpr": 303,
+        "cameras": 304,
+        "flock": 280
+      }
+    },
+    {
+      "slug": "virginia-beach-va",
+      "city": "Virginia Beach",
+      "state": "VA",
+      "center": [
+        -76.05,
+        36.84
+      ],
+      "zoom": 11.3,
+      "counts": {
+        "alpr": 94,
+        "cameras": 94,
+        "flock": 88
+      }
     }
   ]
 }
