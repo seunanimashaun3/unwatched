@@ -20,14 +20,6 @@ export interface GraphData {
   camIsAlpr: ArrayLike<number>;
 }
 
-interface Arc {
-  to: number;
-  edge: number;
-  timeS: number;
-  camAll: number;
-  camAlpr: number;
-}
-
 const GRID_CELL = 0.003; // ~300 m
 const MAX_SPEED_MS = 90 * (1000 / 3600); // heuristic upper bound (admissible)
 
@@ -70,8 +62,16 @@ class Heap {
     return this.a.length;
   }
   private swap(i: number, j: number) {
-    [this.a[i], this.a[j]] = [this.a[j], this.a[i]];
-    [this.f[i], this.f[j]] = [this.f[j], this.f[i]];
+    // plain temp swap — destructuring-swap allocates a throwaway array per call,
+    // which is a real hotspot across millions of heap ops on large graphs
+    const a = this.a;
+    const f = this.f;
+    const ta = a[i];
+    a[i] = a[j];
+    a[j] = ta;
+    const tf = f[i];
+    f[i] = f[j];
+    f[j] = tf;
   }
 }
 
@@ -81,7 +81,14 @@ export class RouteEngine {
   private edgeGeom: Record<string, LngLat[]>;
   private edgeCams: Record<string, number[]>;
   private camIsAlpr: ArrayLike<number>;
-  private adj: Arc[][];
+  // CSR adjacency: arcs for node i live in [rowStart[i], rowStart[i+1]).
+  // Flat typed arrays instead of ~1M Arc objects — big memory + cache win.
+  private rowStart!: Int32Array;
+  private aTo!: Int32Array;
+  private aEdge!: Int32Array;
+  private aTime!: Float32Array;
+  private aCamAll!: Uint16Array;
+  private aCamAlpr!: Uint16Array;
   private grid = new Map<string, number[]>();
 
   constructor(g: GraphData) {
@@ -91,18 +98,61 @@ export class RouteEngine {
     this.edgeCams = g.edgeCams;
     this.camIsAlpr = g.camIsAlpr;
 
-    this.adj = Array.from({ length: this.nodes.length }, () => [] as Arc[]);
-    this.edges.forEach((e, i) => {
-      const [u, v, , t10, , oneway] = e;
-      const timeS = t10 / 10;
+    const N = this.nodes.length;
+    const M = this.edges.length;
+
+    // pass 1: out-degree per node
+    const deg = new Int32Array(N);
+    for (let i = 0; i < M; i++) {
+      const e = this.edges[i];
+      const oneway = e[5];
+      if (oneway === 0 || oneway === 1) deg[e[0]]++;
+      if (oneway === 0 || oneway === 2) deg[e[1]]++;
+    }
+    // prefix-sum -> rowStart
+    const rowStart = new Int32Array(N + 1);
+    for (let i = 0; i < N; i++) rowStart[i + 1] = rowStart[i] + deg[i];
+    const A = rowStart[N];
+    const aTo = new Int32Array(A);
+    const aEdge = new Int32Array(A);
+    const aTime = new Float32Array(A);
+    const aCamAll = new Uint16Array(A);
+    const aCamAlpr = new Uint16Array(A);
+    // pass 2: fill arcs using a moving cursor per node
+    const cursor = Int32Array.from(rowStart.subarray(0, N));
+    for (let i = 0; i < M; i++) {
+      const e = this.edges[i];
+      const u = e[0];
+      const v = e[1];
+      const timeS = e[3] / 10;
       const cams = this.edgeCams[i] || [];
       let camAlpr = 0;
       for (const ci of cams) camAlpr += this.camIsAlpr[ci] ? 1 : 0;
-      const uv: Arc = { to: v, edge: i, timeS, camAll: cams.length, camAlpr };
-      const vu: Arc = { to: u, edge: i, timeS, camAll: cams.length, camAlpr };
-      if (oneway === 0 || oneway === 1) this.adj[u].push(uv);
-      if (oneway === 0 || oneway === 2) this.adj[v].push(vu);
-    });
+      const camAll = cams.length;
+      const oneway = e[5];
+      if (oneway === 0 || oneway === 1) {
+        const p = cursor[u]++;
+        aTo[p] = v;
+        aEdge[p] = i;
+        aTime[p] = timeS;
+        aCamAll[p] = camAll;
+        aCamAlpr[p] = camAlpr;
+      }
+      if (oneway === 0 || oneway === 2) {
+        const p = cursor[v]++;
+        aTo[p] = u;
+        aEdge[p] = i;
+        aTime[p] = timeS;
+        aCamAll[p] = camAll;
+        aCamAlpr[p] = camAlpr;
+      }
+    }
+    this.rowStart = rowStart;
+    this.aTo = aTo;
+    this.aEdge = aEdge;
+    this.aTime = aTime;
+    this.aCamAll = aCamAll;
+    this.aCamAlpr = aCamAlpr;
 
     this.nodes.forEach((n, i) => {
       const k = this.key(Math.round(n[0] / GRID_CELL), Math.round(n[1] / GRID_CELL));
@@ -157,14 +207,23 @@ export class RouteEngine {
     alprOnly: boolean,
   ): { edgePath: number[]; fromPath: number[] } | null {
     const N = this.nodes.length;
-    const g = new Float64Array(N).fill(Infinity);
+    const gScore = new Float64Array(N).fill(Infinity);
     const cameFromNode = new Int32Array(N).fill(-1);
     const cameFromEdge = new Int32Array(N).fill(-1);
     const closed = new Uint8Array(N);
     const end = this.nodes[endNode];
-    const h = (i: number) => haversine(this.nodes[i], end) / MAX_SPEED_MS;
+    // memoize the (trig-heavy) heuristic — a node is relaxed/pushed many times
+    const hCache = new Float64Array(N).fill(-1);
+    const h = (i: number) => {
+      let v = hCache[i];
+      if (v < 0) {
+        v = haversine(this.nodes[i], end) / MAX_SPEED_MS;
+        hCache[i] = v;
+      }
+      return v;
+    };
 
-    g[startNode] = 0;
+    gScore[startNode] = 0;
     const open = new Heap();
     open.push(startNode, h(startNode));
 
@@ -173,20 +232,22 @@ export class RouteEngine {
       if (cur === endNode) break;
       if (closed[cur]) continue;
       closed[cur] = 1;
-      for (const arc of this.adj[cur]) {
-        if (closed[arc.to]) continue;
-        const cams = alprOnly ? arc.camAlpr : arc.camAll;
-        const ng = g[cur] + arc.timeS + penaltyS * cams;
-        if (ng < g[arc.to]) {
-          g[arc.to] = ng;
-          cameFromNode[arc.to] = cur;
-          cameFromEdge[arc.to] = arc.edge;
-          open.push(arc.to, ng + h(arc.to));
+      const rowEnd = this.rowStart[cur + 1];
+      for (let p = this.rowStart[cur]; p < rowEnd; p++) {
+        const to = this.aTo[p];
+        if (closed[to]) continue;
+        const cams = alprOnly ? this.aCamAlpr[p] : this.aCamAll[p];
+        const ng = gScore[cur] + this.aTime[p] + penaltyS * cams;
+        if (ng < gScore[to]) {
+          gScore[to] = ng;
+          cameFromNode[to] = cur;
+          cameFromEdge[to] = this.aEdge[p];
+          open.push(to, ng + h(to));
         }
       }
     }
 
-    if (g[endNode] === Infinity) return null;
+    if (gScore[endNode] === Infinity) return null;
     const edgePath: number[] = [];
     const fromPath: number[] = [];
     let n = endNode;
