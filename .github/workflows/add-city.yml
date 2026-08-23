@@ -49,7 +49,8 @@ jobs:
         run: |
           added="" ; skipped=""
           # split the input on both newlines and semicolons
-          while IFS= read -r raw; do
+          # `|| [ -n "$raw" ]` so the last city (no trailing newline) still runs
+          while IFS= read -r raw || [ -n "$raw" ]; do
             city="$(printf '%s' "$raw" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
             [ -z "$city" ] && continue
             args=(--name "$city" --radius-km "$RADIUS")
