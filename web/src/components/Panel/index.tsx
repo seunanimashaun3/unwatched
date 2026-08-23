@@ -18,14 +18,12 @@ export default function Panel({
   mode,
   onMode,
   meta,
-  citySwitcher,
   onExit,
   children,
 }: {
   mode: Mode;
   onMode: (m: Mode) => void;
   meta: Meta | null;
-  citySwitcher?: ReactNode;
   onExit?: () => void;
   children: ReactNode;
 }) {
@@ -57,7 +55,6 @@ export default function Panel({
             </>
           )}
           <div className="ml-auto flex shrink-0 items-center gap-2">
-            {citySwitcher}
             <ThemeToggle />
           </div>
         </div>

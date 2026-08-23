@@ -309,6 +309,11 @@ export default function City({
       />
       {!ready && <LoadingScreen label={`Loading ${meta.city} road network…`} />}
 
+      {/* current city — floating at the top-center of the map (tap to switch) */}
+      {!driving && (
+        <div className="absolute left-1/2 top-3 z-20 -translate-x-1/2">{citySwitcher}</div>
+      )}
+
       {drive.alert && (
         <DriveAlert
           title={fmtCamera(cameras[drive.alert.cameraIndex])}
@@ -332,7 +337,6 @@ export default function City({
           <MobilePanel
             mode={mode}
             onMode={switchMode}
-            citySwitcher={citySwitcher}
             onExit={onExit}
             start={start}
             end={end}
@@ -362,7 +366,7 @@ export default function City({
             exposure={exposure}
           />
         ) : (
-          <Panel mode={mode} onMode={switchMode} meta={meta} citySwitcher={citySwitcher} onExit={onExit}>
+          <Panel mode={mode} onMode={switchMode} meta={meta} onExit={onExit}>
             <DriveControls
               locating={locating}
               driveMode={driveMode}

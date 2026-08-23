@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
-import { Loader2, MapPin, Search } from "lucide-react";
+import { Loader2, LocateFixed, MapPin, Search } from "lucide-react";
 import type { CityIndexEntry, PendingPoint } from "@/lib/types";
 import { buildMapStyle } from "@/lib/mapStyle";
 import { geocode, type GeoResult } from "@/lib/geocode";
 import { cityForPoint } from "@/lib/proximity";
 import { REQUEST_CITY_URL } from "@/lib/cities";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import { useTheme } from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -23,6 +24,7 @@ export default function Overview({
 }) {
   const { theme } = useTheme();
   const container = useRef<HTMLDivElement>(null);
+  const mapObj = useRef<maplibregl.Map | null>(null);
   const enterRef = useRef(onEnter);
   enterRef.current = onEnter;
 
@@ -30,6 +32,34 @@ export default function Overview({
   const [results, setResults] = useState<GeoResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [notCovered, setNotCovered] = useState<string | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [geoMsg, setGeoMsg] = useState<string | null>(null);
+  const geo = useGeolocation();
+
+  // jump to my location: enter its city if covered, else say it's not
+  const locate = () => {
+    setGeoMsg(null);
+    setNotCovered(null);
+    setLocating(true);
+    geo
+      .locateOnce()
+      .then((f) => {
+        const c = cityForPoint(f.point, cities);
+        if (!c) {
+          setGeoMsg("No cameras mapped near you yet.");
+          return;
+        }
+        const m = mapObj.current;
+        if (m) {
+          m.flyTo({ center: f.point, zoom: 11, duration: 1600, essential: true });
+          window.setTimeout(() => enterRef.current(c.slug), 1500);
+        } else {
+          enterRef.current(c.slug);
+        }
+      })
+      .catch(() => setGeoMsg("Couldn't get your location."))
+      .finally(() => setLocating(false));
+  };
 
   // ---- the map: fit to every supported city, drop a labelled pin on each ----
   useEffect(() => {
@@ -42,7 +72,8 @@ export default function Overview({
       attributionControl: false,
       dragRotate: false,
     });
-    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
+    mapObj.current = map;
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
 
     map.on("load", () => {
       const bounds = new maplibregl.LngLatBounds();
@@ -54,7 +85,16 @@ export default function Overview({
         el.innerHTML =
           `<span class="city-pin-dot"></span>` +
           `<span class="city-pin-label">${c.city}<b>${c.counts.alpr.toLocaleString()} cams</b></span>`;
-        el.addEventListener("click", () => enterRef.current(c.slug));
+        // smooth zoom into the city, then hand off to its planner
+        el.addEventListener("click", () => {
+          map.flyTo({
+            center: c.center as [number, number],
+            zoom: Math.max(map.getZoom(), 9.8),
+            duration: 1400,
+            essential: true,
+          });
+          window.setTimeout(() => enterRef.current(c.slug), 1350);
+        });
         new maplibregl.Marker({ element: el, anchor: "bottom" })
           .setLngLat(c.center as [number, number])
           .addTo(map);
@@ -65,7 +105,10 @@ export default function Overview({
       map.resize(); // guard against a 0-size canvas on first paint
     });
 
-    return () => map.remove();
+    return () => {
+      mapObj.current = null;
+      map.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme, cities]);
 
@@ -118,6 +161,17 @@ export default function Overview({
         <ThemeToggle />
       </div>
 
+      {/* locate — bottom-right FAB, clear of the top search */}
+      <button
+        type="button"
+        onClick={locate}
+        disabled={locating}
+        aria-label="Find my location"
+        className="absolute bottom-20 right-3 z-10 grid size-11 place-items-center rounded-full border border-border bg-card/95 text-muted-foreground shadow-xl backdrop-blur-md transition-colors hover:border-ring hover:text-primary disabled:opacity-60 sm:bottom-6"
+      >
+        {locating ? <Loader2 className="size-5 animate-spin" /> : <LocateFixed className="size-5" />}
+      </button>
+
       {/* search — top center, rectangular */}
       <div className="absolute left-1/2 top-16 z-10 w-[min(28rem,calc(100%-1.5rem))] -translate-x-1/2 sm:top-3">
         <div className="relative">
@@ -165,15 +219,30 @@ export default function Overview({
         </div>
       </div>
 
-      {/* bottom hint: the pins are the primary way in */}
-      <div className="pointer-events-none absolute bottom-5 left-1/2 z-10 -translate-x-1/2">
-        <div className="rounded-full border border-border bg-card/90 px-4 py-2 text-center text-[12.5px] shadow-lg backdrop-blur-md">
-          Tap a city to plan a route
-          <span className="mx-1.5 text-faint">·</span>
-          <span className="text-muted-foreground">
-            {cities.length} cities, {cities.reduce((n, c) => n + c.counts.alpr, 0).toLocaleString()} cameras mapped
-          </span>
-        </div>
+      {/* bottom: a "not covered near you" prompt after locate, else the hint */}
+      <div className="absolute bottom-5 left-1/2 z-10 w-[min(28rem,calc(100%-1.5rem))] -translate-x-1/2">
+        {geoMsg ? (
+          <div className="rounded-lg border border-border bg-card/95 px-4 py-2.5 text-center text-[12.5px] shadow-xl backdrop-blur-md">
+            <b className="text-alert">{geoMsg}</b>
+            {REQUEST_CITY_URL && (
+              <>
+                {" "}
+                <a href={REQUEST_CITY_URL} target="_blank" rel="noreferrer" className="underline underline-offset-2">
+                  Request your city
+                </a>
+                .
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="pointer-events-none rounded-full border border-border bg-card/90 px-4 py-2 text-center text-[12.5px] shadow-lg backdrop-blur-md">
+            Tap a city to plan a route
+            <span className="mx-1.5 text-faint">·</span>
+            <span className="text-muted-foreground">
+              {cities.length} cities, {cities.reduce((n, c) => n + c.counts.alpr, 0).toLocaleString()} cameras mapped
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

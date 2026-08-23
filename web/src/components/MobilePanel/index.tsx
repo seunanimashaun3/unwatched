@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { ChevronDown, ChevronLeft, Loader2, LocateFixed, Navigation2, SlidersHorizontal, X } from "lucide-react";
 import type { Exposure } from "@/lib/exposure";
 import type { LngLat, Preset, RouteResponse } from "@/lib/types";
@@ -19,7 +19,6 @@ import type { Arm } from "@/components/RoutePanel";
 export interface MobilePanelProps {
   mode: Mode;
   onMode: (m: Mode) => void;
-  citySwitcher: ReactNode;
   onExit?: () => void;
   start: LngLat | null;
   end: LngLat | null;
@@ -97,7 +96,6 @@ export default function MobilePanel(props: MobilePanelProps) {
           </>
         )}
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          {props.citySwitcher}
           <ThemeToggle />
           <button
             type="button"

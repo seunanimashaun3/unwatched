@@ -43,7 +43,7 @@ export default function CitySwitcher({
       <PopoverTrigger asChild>
         <button
           aria-label="Switch city"
-          className="flex items-center gap-1 whitespace-nowrap rounded-full border border-border bg-foreground/[0.06] px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:border-ring hover:text-foreground"
+          className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-card/90 px-3.5 py-2 text-[13px] font-semibold text-foreground shadow-lg backdrop-blur-md transition-colors hover:border-ring"
         >
           {current ? `${current.city}, ${current.state}` : "Select city"}
           <ChevronDown className="size-3.5 shrink-0" />

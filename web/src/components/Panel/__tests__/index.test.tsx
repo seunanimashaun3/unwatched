@@ -48,15 +48,6 @@ describe("Panel", () => {
     expect(onMode).toHaveBeenCalledWith("exposure");
   });
 
-  it("renders the city switcher slot", () => {
-    render(
-      <Panel mode="route" onMode={vi.fn()} meta={META} citySwitcher={<button>Switch</button>}>
-        <div />
-      </Panel>,
-    );
-    expect(screen.getByRole("button", { name: "Switch" })).toBeInTheDocument();
-  });
-
   it("surfaces the data provenance and the incompleteness caveat", () => {
     render(
       <Panel mode="route" onMode={vi.fn()} meta={META}>

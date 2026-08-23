@@ -209,6 +209,32 @@
   color: var(--faint);
 }
 
+/* On phones the labelled chips overlap into a mess — show just dots (bigger,
+   with a halo) so coverage is legible; tapping still enters the city. */
+@media (max-width: 640px) {
+  .city-pin {
+    gap: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+  .city-pin:hover {
+    transform: none;
+    border: none;
+    box-shadow: none;
+  }
+  .city-pin-label {
+    display: none;
+  }
+  .city-pin-dot {
+    width: 15px;
+    height: 15px;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 30%, transparent),
+      0 2px 6px rgba(0, 0, 0, 0.5);
+  }
+}
+
 /* When the drive NavBar is showing, push the map's top-right zoom controls
    below it so they don't overlap. */
 body.driving .maplibregl-ctrl-top-right {
