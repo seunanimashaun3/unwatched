@@ -160,6 +160,10 @@ def main():
     if cities.has_city(slug) and not args.force:
         raise SystemExit(f"'{slug}' already exists. Use --force to rebuild.")
 
+    # snapshot an existing city so a failed rebuild restores it rather than
+    # deleting a previously-good city (e.g. a transient Overpass outage).
+    prev = cities.get_city(slug) if cities.has_city(slug) else None
+
     curated = metro_bbox(slug)
     if args.bbox:
         bbox = [round(float(x), 4) for x in args.bbox.split(",")]
@@ -194,7 +198,9 @@ def main():
     if problems and not vetted:
         raise SystemExit("Skipping — " + "; ".join(problems) + ".  (Pass --force to override.)")
 
-    entry = {"name": name, "state": state, "bbox": bbox, "center": center, "zoom": zoom, "presets": []}
+    # keep hand-tuned presets across a rebuild
+    presets = prev.get("presets", []) if prev else []
+    entry = {"name": name, "state": state, "bbox": bbox, "center": center, "zoom": zoom, "presets": presets}
     print("\nProposed entry:\n" + json.dumps({slug: entry}, indent=2))
 
     if args.dry_run:
@@ -217,10 +223,16 @@ def main():
         cities.save_city(slug, entry)
         subprocess.run([sys.executable, "scripts/build_index.py"], check=True, cwd=ROOT)
     except BaseException as e:
-        print(f"\nFailed ({e}); rolling back {slug}.", file=sys.stderr)
-        cities.remove_city(slug)
         shutil.rmtree(ROOT / "data" / "raw" / slug, ignore_errors=True)
-        shutil.rmtree(ROOT / "web" / "public" / "data" / slug, ignore_errors=True)
+        if prev is not None:
+            # existing city — restore its prior entry; its data on R2 is untouched
+            print(f"\nFailed ({e}); restoring previous {slug} (unchanged).", file=sys.stderr)
+            cities.save_city(slug, prev)
+        else:
+            # brand-new city — remove the half-built artifacts entirely
+            print(f"\nFailed ({e}); rolling back {slug}.", file=sys.stderr)
+            cities.remove_city(slug)
+            shutil.rmtree(ROOT / "web" / "public" / "data" / slug, ignore_errors=True)
         subprocess.run([sys.executable, "scripts/build_index.py"], cwd=ROOT)
         raise SystemExit(1)
 
