@@ -705,5 +705,29 @@
       "cameras": 196,
       "flock": 177
     }
+  },
+  "chattanooga-tn": {
+    "name": "Chattanooga",
+    "state": "TN",
+    "bbox": [
+      -85.42,
+      34.9,
+      -85.08,
+      35.18
+    ],
+    "center": [
+      -85.25,
+      35.04
+    ],
+    "zoom": 9.5,
+    "presets": [],
+    "counts": {
+      "nodes": 74965,
+      "edges": 92962,
+      "cameras": 131,
+      "alpr": 98,
+      "flock": 63,
+      "watchedEdges": 383
+    }
   }
 }
