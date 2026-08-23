@@ -58,63 +58,48 @@
     "name": "New York",
     "state": "NY",
     "bbox": [
-      -74.02,
-      40.7,
-      -73.9,
-      40.82
+      -74.05,
+      40.56,
+      -73.7,
+      40.92
     ],
     "center": [
-      -73.98,
-      40.758
+      -73.875,
+      40.74
     ],
-    "zoom": 12.0,
+    "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 400,
-      "cameras": 844,
-      "flock": 13
-    }
-  },
-  "atlanta-ga": {
-    "name": "Atlanta",
-    "state": "GA",
-    "bbox": [
-      -84.46,
-      33.7,
-      -84.32,
-      33.82
-    ],
-    "center": [
-      -84.388,
-      33.749
-    ],
-    "zoom": 11.8,
-    "presets": [],
-    "counts": {
-      "alpr": 385,
-      "cameras": 394,
-      "flock": 311
+      "nodes": 285394,
+      "edges": 347814,
+      "cameras": 1969,
+      "alpr": 1355,
+      "flock": 172,
+      "watchedEdges": 6927
     }
   },
   "chicago-il": {
     "name": "Chicago",
     "state": "IL",
     "bbox": [
-      -87.72,
-      41.82,
-      -87.58,
-      41.96
+      -87.85,
+      41.72,
+      -87.55,
+      42.02
     ],
     "center": [
-      -87.63,
-      41.885
+      -87.7,
+      41.87
     ],
-    "zoom": 11.6,
+    "zoom": 9.7,
     "presets": [],
     "counts": {
-      "alpr": 316,
-      "cameras": 654,
-      "flock": 42
+      "nodes": 291180,
+      "edges": 364908,
+      "cameras": 1726,
+      "alpr": 1003,
+      "flock": 375,
+      "watchedEdges": 9138
     }
   },
   "san-jose-ca": {
