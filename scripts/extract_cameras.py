@@ -25,6 +25,7 @@ from cities import get_city
 OVERPASS_ENDPOINTS = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.kumi.systems/api/interpreter",
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
 ]
 
 
@@ -38,21 +39,31 @@ def query(bbox) -> str:
     )
 
 
-def fetch(q: str) -> dict:
+def fetch(q: str, rounds: int = 5) -> dict:
+    """Query Overpass, cycling endpoints. If the whole set fails, back off and
+    retry — Overpass has frequent short (seconds-to-minutes) outages, and a
+    single miss shouldn't fail a city build."""
+    data = ("data=" + urllib.parse.quote(q)).encode()
     last_err = None
-    for url in OVERPASS_ENDPOINTS:
-        try:
-            data = ("data=" + urllib.parse.quote(q)).encode()
-            req = urllib.request.Request(
-                url, data=data, headers={"User-Agent": "unwatched/1.0 (privacy tool)"}
+    for attempt in range(rounds):
+        for url in OVERPASS_ENDPOINTS:
+            try:
+                req = urllib.request.Request(
+                    url, data=data, headers={"User-Agent": "unwatched/1.0 (privacy tool)"}
+                )
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    return json.load(resp)
+            except Exception as e:  # noqa: BLE001
+                last_err = e
+                print(f"  endpoint {url} failed: {e}", file=sys.stderr)
+        if attempt < rounds - 1:
+            wait = min(60, 8 * (2 ** attempt))  # 8, 16, 32, 60s
+            print(
+                f"  all endpoints failed (round {attempt + 1}/{rounds}); backing off {wait}s…",
+                file=sys.stderr,
             )
-            with urllib.request.urlopen(req, timeout=120) as resp:
-                return json.load(resp)
-        except Exception as e:  # noqa: BLE001
-            last_err = e
-            print(f"  endpoint {url} failed: {e}; retrying next...", file=sys.stderr)
-            time.sleep(3)
-    raise RuntimeError(f"all overpass endpoints failed: {last_err}")
+            time.sleep(wait)
+    raise RuntimeError(f"all overpass endpoints failed after {rounds} rounds: {last_err}")
 
 
 def classify(tags: dict) -> str:

@@ -100,11 +100,12 @@ def zoom_for(bbox):
     return round(max(9.5, min(13.0, math.log2(360 / span) - 0.5)), 1)
 
 
-def _overpass(query):
-    """POST an Overpass query, trying each endpoint with a couple retries."""
+def _overpass(query, rounds=4):
+    """POST an Overpass query, cycling endpoints and backing off between rounds
+    so a short outage doesn't turn into a needless skip."""
     data = ("data=" + urllib.parse.quote(query)).encode()
     last = None
-    for _ in range(2):
+    for attempt in range(rounds):
         for url in OVERPASS_ENDPOINTS:
             try:
                 req = urllib.request.Request(url, data=data, headers=UA)
@@ -113,7 +114,10 @@ def _overpass(query):
             except Exception as ex:  # noqa: BLE001
                 last = ex
                 print(f"  overpass {url} failed ({ex}); trying next…", file=sys.stderr)
-                time.sleep(2)
+        if attempt < rounds - 1:
+            wait = min(60, 8 * (2 ** attempt))
+            print(f"  all endpoints failed (round {attempt + 1}/{rounds}); backing off {wait}s…", file=sys.stderr)
+            time.sleep(wait)
     raise SystemExit(f"Overpass is unavailable right now ({last}). Try again in a minute.")
 
 
