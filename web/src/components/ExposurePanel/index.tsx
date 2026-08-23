@@ -22,7 +22,7 @@ export default function ExposurePanel({ exposure }: { exposure: Exposure | null 
     <>
       <div className="pb-1.5 pt-4 text-center">
         <div
-          className={cn("text-[52px] font-extrabold leading-none tracking-tighter tabular-nums", SCORE_COLOR[band.cls])}
+          className={cn("font-mono text-[54px] font-bold leading-none tracking-tight", SCORE_COLOR[band.cls])}
           data-testid="exposure-score"
         >
           {exposure.alpr}
@@ -47,7 +47,7 @@ function Row({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="flex justify-between border-b border-border py-1.5 text-[12.5px]">
       <span className="text-muted-foreground">{label}</span>
-      <span className="font-bold tabular-nums">{value}</span>
+      <span className="font-mono font-bold">{value}</span>
     </div>
   );
 }

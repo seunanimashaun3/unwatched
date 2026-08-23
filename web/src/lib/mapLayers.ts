@@ -71,29 +71,25 @@ export function initMapLayers(m: maplibregl.Map, cameras: Camera[]) {
   m.addSource("route-fast", { type: "geojson", data: emptyFC() });
   m.addSource("route-private", { type: "geojson", data: emptyFC() });
 
+  const casing = { "line-color": "#ffffff", "line-opacity": 0.9 } as const;
+  const cap = { "line-cap": "round", "line-join": "round" } as const;
+  // fastest route: white casing + indigo line (drawn under the private route)
+  m.addLayer({ id: "route-fast-casing", type: "line", source: "route-fast", paint: { ...casing, "line-width": 8 }, layout: cap });
   m.addLayer({
     id: "route-fast",
     type: "line",
     source: "route-fast",
-    paint: {
-      "line-color": COLORS.fast,
-      "line-width": 5,
-      "line-opacity": 0.55,
-      "line-dasharray": [1.5, 1.5],
-    },
-    layout: { "line-cap": "round", "line-join": "round" },
+    paint: { "line-color": COLORS.fast, "line-width": 4.5, "line-opacity": 0.85 },
+    layout: cap,
   });
+  // least-watched route: white casing + emerald line, on top
+  m.addLayer({ id: "route-private-casing", type: "line", source: "route-private", paint: { ...casing, "line-width": 9 }, layout: cap });
   m.addLayer({
     id: "route-private",
     type: "line",
     source: "route-private",
-    paint: {
-      "line-color": COLORS.safe,
-      "line-width": 6,
-      "line-opacity": 0.95,
-      "line-blur": 0.3,
-    },
-    layout: { "line-cap": "round", "line-join": "round" },
+    paint: { "line-color": COLORS.safe, "line-width": 5.5, "line-opacity": 0.98 },
+    layout: cap,
   });
   m.addLayer({
     id: "cam-glow",

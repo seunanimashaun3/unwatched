@@ -33,11 +33,11 @@ export default function Legend({ alprOnly }: { alprOnly: boolean }) {
       className="glass absolute bottom-4 right-4 z-10 hidden gap-1.5 rounded-xl border border-border p-3 text-[11.5px] shadow-2xl sm:grid"
       aria-label="Map legend"
     >
-      <Row color="#ff4d5e" label="Plate reader (ALPR)" />
+      <Row color="#f5333f" label="Plate reader (ALPR)" />
       {!alprOnly && <Row color="#8b95a7" label="Other camera" />}
-      <Row color="#ff4d5e" ring label="On selected route (tap a dot for details)" />
-      <Row color="#35e0a1" bar label="Least-watched route" />
-      <Row color="#9aa4b6" bar label="Fastest route" />
+      <Row color="#f5333f" ring label="On selected route (tap a dot for details)" />
+      <Row color="#10b981" bar label="Least-watched route" />
+      <Row color="#5b53ff" bar label="Fastest route" />
     </div>
   );
 }

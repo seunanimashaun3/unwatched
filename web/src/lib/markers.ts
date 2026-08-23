@@ -5,8 +5,8 @@ export type MarkerKind = "a" | "b" | "exp";
 
 const BG: Record<MarkerKind, string> = {
   a: "#ffffff",
-  b: "#35e0a1",
-  exp: "#6ea8fe",
+  b: "#10b981",
+  exp: "#5b53ff",
 };
 
 /**

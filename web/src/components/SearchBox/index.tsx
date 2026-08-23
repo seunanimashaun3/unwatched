@@ -70,7 +70,7 @@ export default function SearchBox({
     <div className="relative mb-2.5 flex items-center gap-2.5">
       <span
         className="grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold text-[#05070a] sm:size-[22px]"
-        style={{ background: kind === "a" ? "#ffffff" : "#35e0a1" }}
+        style={{ background: kind === "a" ? "#ffffff" : "#10b981" }}
       >
         {kind.toUpperCase()}
       </span>

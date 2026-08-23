@@ -78,7 +78,7 @@ export default function MobilePanel(props: MobilePanelProps) {
 
       <div className="flex shrink-0 items-center gap-2 px-4 pb-2.5">
         <span className="size-2.5 rounded-full bg-alert" />
-        <span className="text-[15px] font-bold tracking-tight">Unwatched</span>
+        <span className="font-display text-[16px] font-bold tracking-tight">Unwatched</span>
         <div className="ml-auto flex items-center gap-2">
           {props.citySwitcher}
           <ThemeToggle />

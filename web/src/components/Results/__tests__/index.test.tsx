@@ -64,8 +64,8 @@ describe("Results", () => {
         onSelectRoute={vi.fn()}
       />,
     );
-    // the selected (fastest) card carries the "cameras shown" marker
+    // the selected (fastest) card carries the "shown" marker
     const fastCard = screen.getByRole("button", { name: /Fastest route/i });
-    expect(fastCard.textContent).toMatch(/cameras shown/i);
+    expect(fastCard.textContent).toMatch(/shown/i);
   });
 });

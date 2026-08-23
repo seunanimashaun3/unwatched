@@ -22,7 +22,7 @@ export default function NavBar({
         </div>
         {nextName && nextDistanceM !== null ? (
           <div className="truncate text-sm font-bold">
-            {nextName} · <span className="text-alert tabular-nums">{Math.round(nextDistanceM)} m</span>
+            {nextName} · <span className="text-alert font-mono">{Math.round(nextDistanceM)} m</span>
           </div>
         ) : (
           <div className="text-sm font-semibold text-muted-foreground">None nearby</div>
@@ -31,13 +31,13 @@ export default function NavBar({
 
       {speedMph !== null && (
         <div className="text-center">
-          <div className="text-lg font-bold leading-none tabular-nums">{Math.round(speedMph)}</div>
+          <div className="text-lg font-mono font-bold leading-none">{Math.round(speedMph)}</div>
           <div className="text-[10px] text-faint">mph</div>
         </div>
       )}
 
       <div className="text-center">
-        <div className="text-lg font-bold leading-none tabular-nums text-alert">{loggedCount}</div>
+        <div className="text-lg font-mono font-bold leading-none text-alert">{loggedCount}</div>
         <div className="text-[10px] text-faint">logged</div>
       </div>
 

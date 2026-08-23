@@ -1,14 +1,18 @@
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { fmtDistance, fmtDuration } from "@/lib/geo";
 
-function Stat({ value, unit, className }: { value: string; unit: string; className?: string }) {
+function Stat({ value, unit, valueClass }: { value: string; unit: string; valueClass?: string }) {
   return (
     <div>
-      <div className={cn("text-xl font-bold tracking-tight tabular-nums", className)} data-testid={unit === "cameras" ? "cam-count" : undefined}>
+      <div
+        className={cn("font-mono text-lg font-bold leading-none", valueClass)}
+        data-testid={unit === "cameras" ? "cam-count" : undefined}
+      >
         {value}
       </div>
-      <div className="mt-px text-[10.5px] uppercase tracking-wide text-faint">{unit}</div>
+      <div className="mt-1.5 text-[10px] font-medium uppercase tracking-wide text-faint">{unit}</div>
     </div>
   );
 }
@@ -30,6 +34,7 @@ export default function RouteCard({
   selected?: boolean;
   onSelect?: () => void;
 }) {
+  const priv = kind === "priv";
   return (
     <Card
       role={onSelect ? "button" : undefined}
@@ -38,29 +43,25 @@ export default function RouteCard({
       onClick={onSelect}
       onKeyDown={onSelect ? (e) => (e.key === "Enter" || e.key === " ") && onSelect() : undefined}
       className={cn(
-        "p-3.5 transition-all",
-        onSelect && "cursor-pointer",
-        kind === "priv" ? "border-safe/40 bg-safe/[0.06]" : "bg-foreground/[0.02]",
-        selected && "ring-2 ring-offset-1 ring-offset-transparent",
-        selected && (kind === "priv" ? "ring-safe" : "ring-alert"),
+        "p-4 transition-all",
+        onSelect && "cursor-pointer hover:border-foreground/20",
+        priv ? "border-safe/40 bg-safe/[0.05]" : "bg-foreground/[0.02]",
+        selected && (priv ? "ring-2 ring-safe" : "ring-2 ring-brand"),
       )}
     >
-      <div className="mb-2.5 flex items-center gap-2">
-        <span
-          className="h-1 w-3.5 rounded-full"
-          style={{ background: kind === "priv" ? "#35e0a1" : "#8b95a7" }}
-        />
-        <span className="text-[13px] font-bold">{title}</span>
-        {selected && <span className="ml-auto text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">cameras shown</span>}
+      <div className="mb-3.5 flex items-center gap-2">
+        <span className="size-2 rounded-full" style={{ background: priv ? "#10b981" : "#5b53ff" }} />
+        <span className="text-[13.5px] font-bold tracking-tight">{title}</span>
+        {selected && (
+          <span className="ml-auto flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            <Check className="size-3" /> shown
+          </span>
+        )}
       </div>
-      <div className="flex gap-4">
+      <div className="flex items-start justify-between">
+        <Stat value={String(cams)} unit="cameras" valueClass={cams === 0 ? "text-safe" : "text-alert"} />
         <Stat value={fmtDuration(time)} unit="time" />
         <Stat value={fmtDistance(dist)} unit="distance" />
-        <Stat
-          value={String(cams)}
-          unit="cameras"
-          className={cams === 0 ? "text-safe" : "text-alert"}
-        />
       </div>
     </Card>
   );
