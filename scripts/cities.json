@@ -47,7 +47,12 @@
           37.735
         ]
       }
-    ]
+    ],
+    "counts": {
+      "alpr": 526,
+      "cameras": 1907,
+      "flock": 483
+    }
   },
   "new-york-ny": {
     "name": "New York",
@@ -63,7 +68,12 @@
       40.758
     ],
     "zoom": 12.0,
-    "presets": []
+    "presets": [],
+    "counts": {
+      "alpr": 400,
+      "cameras": 844,
+      "flock": 13
+    }
   },
   "atlanta-ga": {
     "name": "Atlanta",
@@ -79,7 +89,12 @@
       33.749
     ],
     "zoom": 11.8,
-    "presets": []
+    "presets": [],
+    "counts": {
+      "alpr": 385,
+      "cameras": 394,
+      "flock": 311
+    }
   },
   "chicago-il": {
     "name": "Chicago",
@@ -95,7 +110,12 @@
       41.885
     ],
     "zoom": 11.6,
-    "presets": []
+    "presets": [],
+    "counts": {
+      "alpr": 316,
+      "cameras": 654,
+      "flock": 42
+    }
   },
   "san-jose-ca": {
     "name": "San Jose",
@@ -111,7 +131,12 @@
       37.338
     ],
     "zoom": 11.4,
-    "presets": []
+    "presets": [],
+    "counts": {
+      "alpr": 700,
+      "cameras": 827,
+      "flock": 653
+    }
   },
   "norfolk-va": {
     "name": "Norfolk",
@@ -127,7 +152,12 @@
       36.885
     ],
     "zoom": 12.0,
-    "presets": []
+    "presets": [],
+    "counts": {
+      "alpr": 303,
+      "cameras": 304,
+      "flock": 280
+    }
   },
   "virginia-beach-va": {
     "name": "Virginia Beach",
@@ -143,7 +173,12 @@
       36.84
     ],
     "zoom": 11.3,
-    "presets": []
+    "presets": [],
+    "counts": {
+      "alpr": 94,
+      "cameras": 94,
+      "flock": 88
+    }
   },
   "nashville-tn": {
     "name": "Nashville",
@@ -182,7 +217,12 @@
           36.1627
         ]
       }
-    ]
+    ],
+    "counts": {
+      "alpr": 270,
+      "cameras": 289,
+      "flock": 250
+    }
   },
   "las-vegas-nv": {
     "name": "Las Vegas",
@@ -198,7 +238,12 @@
       36.145
     ],
     "zoom": 11.2,
-    "presets": []
+    "presets": [],
+    "counts": {
+      "alpr": 273,
+      "cameras": 291,
+      "flock": 170
+    }
   },
   "denver-co": {
     "name": "Denver",
@@ -214,6 +259,11 @@
       39.7392364
     ],
     "zoom": 9.8,
-    "presets": []
+    "presets": [],
+    "counts": {
+      "alpr": 446,
+      "cameras": 1692,
+      "flock": 383
+    }
   }
 }

@@ -190,6 +190,11 @@ def main():
         gz = graph_gz_mb(slug)
         if gz > MAX_GRAPH_MB and not args.force:
             raise SystemExit(f"graph is {gz:.1f} MB gz (> {MAX_GRAPH_MB}); tighten the bbox.")
+        # persist the built counts into the registry so the index can be rebuilt
+        # from the registry alone (CI never has the other cities' data on disk).
+        meta = json.loads((ROOT / "web" / "public" / "data" / slug / "meta.json").read_text())
+        entry["counts"] = meta["counts"]
+        cities.save_city(slug, entry)
         subprocess.run([sys.executable, "scripts/build_index.py"], check=True, cwd=ROOT)
     except BaseException as e:
         print(f"\nFailed ({e}); rolling back {slug}.", file=sys.stderr)

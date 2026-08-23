@@ -3,7 +3,8 @@ City registry — backed by cities.json (a data file, so tooling/workflows can
 append to it; a Python dict couldn't be edited cleanly). This module is the one
 place the pipeline reads city config from.
 
-Each entry: {name, state, bbox:[W,S,E,N], center:[lon,lat], zoom, presets}.
+Each entry: {name, state, bbox:[W,S,E,N], center:[lon,lat], zoom, presets,
+counts:{alpr,cameras,flock}} — counts are added once the city is built.
 
 The JSON registry is intentionally the same shape a future `cities` DB table
 would have (one row per city), so this swaps to a database with minimal change:
@@ -42,7 +43,10 @@ def has_city(slug: str) -> bool:
 def save_city(slug: str, entry: dict) -> None:
     """Add or update a city in the registry."""
     cities = _load()
-    cities[slug] = {k: entry[k] for k in ("name", "state", "bbox", "center", "zoom", "presets")}
+    row = {k: entry[k] for k in ("name", "state", "bbox", "center", "zoom", "presets")}
+    if entry.get("counts"):
+        row["counts"] = entry["counts"]
+    cities[slug] = row
     _write(cities)
 
 
