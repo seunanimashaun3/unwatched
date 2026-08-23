@@ -250,5 +250,29 @@
       "cameras": 1692,
       "flock": 383
     }
+  },
+  "atlanta-ga": {
+    "name": "Atlanta",
+    "state": "GA",
+    "bbox": [
+      -84.55,
+      33.62,
+      -84.28,
+      33.9
+    ],
+    "center": [
+      -84.415,
+      33.76
+    ],
+    "zoom": 9.8,
+    "presets": [],
+    "counts": {
+      "nodes": 148946,
+      "edges": 184049,
+      "cameras": 1378,
+      "alpr": 1361,
+      "flock": 1251,
+      "watchedEdges": 5378
+    }
   }
 }
