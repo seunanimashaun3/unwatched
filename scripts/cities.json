@@ -277,5 +277,317 @@
       "flock": 1251,
       "watchedEdges": 5378
     }
+  },
+  "houston-tx": {
+    "name": "Houston",
+    "state": "TX",
+    "bbox": [
+      -95.57,
+      29.63,
+      -95.25,
+      29.9
+    ],
+    "center": [
+      -95.41,
+      29.765
+    ],
+    "zoom": 9.6,
+    "presets": [],
+    "counts": {
+      "nodes": 224213,
+      "edges": 296631,
+      "cameras": 1726,
+      "alpr": 1685,
+      "flock": 1514,
+      "watchedEdges": 6593
+    }
+  },
+  "phoenix-az": {
+    "name": "Phoenix",
+    "state": "AZ",
+    "bbox": [
+      -112.24,
+      33.36,
+      -111.9,
+      33.7
+    ],
+    "center": [
+      -112.07,
+      33.53
+    ],
+    "zoom": 9.5,
+    "presets": [],
+    "counts": {
+      "nodes": 315753,
+      "edges": 405965,
+      "cameras": 468,
+      "alpr": 425,
+      "flock": 366,
+      "watchedEdges": 1866
+    }
+  },
+  "philadelphia-pa": {
+    "name": "Philadelphia",
+    "state": "PA",
+    "bbox": [
+      -75.28,
+      39.87,
+      -75.05,
+      40.1
+    ],
+    "center": [
+      -75.165,
+      39.985
+    ],
+    "zoom": 10.1,
+    "presets": [],
+    "counts": {
+      "nodes": 147600,
+      "edges": 188736,
+      "cameras": 330,
+      "alpr": 129,
+      "flock": 63,
+      "watchedEdges": 986
+    }
+  },
+  "dallas-tx": {
+    "name": "Dallas",
+    "state": "TX",
+    "bbox": [
+      -96.95,
+      32.65,
+      -96.68,
+      32.92
+    ],
+    "center": [
+      -96.815,
+      32.785
+    ],
+    "zoom": 9.9,
+    "presets": [],
+    "counts": {
+      "nodes": 164873,
+      "edges": 221954,
+      "cameras": 808,
+      "alpr": 775,
+      "flock": 763,
+      "watchedEdges": 4143
+    }
+  },
+  "san-antonio-tx": {
+    "name": "San Antonio",
+    "state": "TX",
+    "bbox": [
+      -98.66,
+      29.35,
+      -98.4,
+      29.6
+    ],
+    "center": [
+      -98.53,
+      29.475
+    ],
+    "zoom": 9.9,
+    "presets": [],
+    "counts": {
+      "nodes": 145741,
+      "edges": 195394,
+      "cameras": 346,
+      "alpr": 233,
+      "flock": 226,
+      "watchedEdges": 1182
+    }
+  },
+  "san-diego-ca": {
+    "name": "San Diego",
+    "state": "CA",
+    "bbox": [
+      -117.28,
+      32.63,
+      -117.02,
+      32.87
+    ],
+    "center": [
+      -117.15,
+      32.75
+    ],
+    "zoom": 9.9,
+    "presets": [],
+    "counts": {
+      "nodes": 146279,
+      "edges": 176077,
+      "cameras": 692,
+      "alpr": 521,
+      "flock": 131,
+      "watchedEdges": 3728
+    }
+  },
+  "washington-dc": {
+    "name": "Washington",
+    "state": "DC",
+    "bbox": [
+      -77.14,
+      38.8,
+      -76.9,
+      39.01
+    ],
+    "center": [
+      -77.02,
+      38.905
+    ],
+    "zoom": 10.1,
+    "presets": [],
+    "counts": {
+      "nodes": 164750,
+      "edges": 201961,
+      "cameras": 925,
+      "alpr": 297,
+      "flock": 273,
+      "watchedEdges": 2432
+    }
+  },
+  "boston-ma": {
+    "name": "Boston",
+    "state": "MA",
+    "bbox": [
+      -71.19,
+      42.28,
+      -70.98,
+      42.42
+    ],
+    "center": [
+      -71.085,
+      42.35
+    ],
+    "zoom": 10.2,
+    "presets": [],
+    "counts": {
+      "nodes": 86211,
+      "edges": 103673,
+      "cameras": 3645,
+      "alpr": 118,
+      "flock": 67,
+      "watchedEdges": 7138
+    }
+  },
+  "seattle-wa": {
+    "name": "Seattle",
+    "state": "WA",
+    "bbox": [
+      -122.42,
+      47.43,
+      -122.24,
+      47.74
+    ],
+    "center": [
+      -122.33,
+      47.585
+    ],
+    "zoom": 9.7,
+    "presets": [],
+    "counts": {
+      "nodes": 139352,
+      "edges": 164583,
+      "cameras": 1473,
+      "alpr": 180,
+      "flock": 94,
+      "watchedEdges": 4059
+    }
+  },
+  "miami-fl": {
+    "name": "Miami",
+    "state": "FL",
+    "bbox": [
+      -80.35,
+      25.7,
+      -80.12,
+      25.92
+    ],
+    "center": [
+      -80.235,
+      25.81
+    ],
+    "zoom": 10.1,
+    "presets": [],
+    "counts": {
+      "nodes": 143516,
+      "edges": 184935,
+      "cameras": 308,
+      "alpr": 294,
+      "flock": 216,
+      "watchedEdges": 1371
+    }
+  },
+  "portland-or": {
+    "name": "Portland",
+    "state": "OR",
+    "bbox": [
+      -122.78,
+      45.44,
+      -122.55,
+      45.62
+    ],
+    "center": [
+      -122.665,
+      45.53
+    ],
+    "zoom": 10.1,
+    "presets": [],
+    "counts": {
+      "nodes": 92476,
+      "edges": 114541,
+      "cameras": 200,
+      "alpr": 71,
+      "flock": 35,
+      "watchedEdges": 799
+    }
+  },
+  "detroit-mi": {
+    "name": "Detroit",
+    "state": "MI",
+    "bbox": [
+      -83.3,
+      42.28,
+      -82.92,
+      42.45
+    ],
+    "center": [
+      -83.11,
+      42.365
+    ],
+    "zoom": 9.5,
+    "presets": [],
+    "counts": {
+      "nodes": 171953,
+      "edges": 222856,
+      "cameras": 851,
+      "alpr": 742,
+      "flock": 472,
+      "watchedEdges": 3334
+    }
+  },
+  "minneapolis-mn": {
+    "name": "Minneapolis",
+    "state": "MN",
+    "bbox": [
+      -93.35,
+      44.86,
+      -93.15,
+      45.05
+    ],
+    "center": [
+      -93.25,
+      44.955
+    ],
+    "zoom": 10.3,
+    "presets": [],
+    "counts": {
+      "nodes": 109134,
+      "edges": 135707,
+      "cameras": 653,
+      "alpr": 219,
+      "flock": 150,
+      "watchedEdges": 2628
+    }
   }
 }
