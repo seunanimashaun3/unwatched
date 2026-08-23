@@ -37,6 +37,19 @@ MAX_AREA_DEG2 = 0.16      # wider than this tends to blow up the graph
 MAX_GRAPH_MB = 5.0        # gzipped graph.json cap (Vegas full-metro was 6.8)
 DEFAULT_RADIUS_KM = 8.0
 
+# curated core-metro boxes (scripts/metros.json) for big metros where a radius
+# box misses the outer boroughs/airports. Keyed by slug; vetted, so they bypass
+# the area/graph-size guardrails.
+METROS = ROOT / "scripts" / "metros.json"
+
+
+def metro_bbox(slug: str):
+    """Curated [W,S,E,N] for a known large metro, or None."""
+    if not METROS.exists():
+        return None
+    box = json.loads(METROS.read_text()).get(slug)
+    return [round(float(x), 4) for x in box] if box else None
+
 UA = {"User-Agent": "unwatched-add-city/1.0"}
 OVERPASS_ENDPOINTS = [
     "https://overpass-api.de/api/interpreter",
@@ -147,15 +160,22 @@ def main():
     if cities.has_city(slug) and not args.force:
         raise SystemExit(f"'{slug}' already exists. Use --force to rebuild.")
 
+    curated = metro_bbox(slug)
     if args.bbox:
         bbox = [round(float(x), 4) for x in args.bbox.split(",")]
         if len(bbox) != 4:
             raise SystemExit("--bbox must be W,S,E,N")
         center = [round((bbox[0] + bbox[2]) / 2, 4), round((bbox[1] + bbox[3]) / 2, 4)]
+    elif curated:
+        bbox = curated
+        center = [round((bbox[0] + bbox[2]) / 2, 4), round((bbox[1] + bbox[3]) / 2, 4)]
+        print(f"Using curated core-metro bbox for {slug}.")
     else:
         center = geocode(f"{name}, {state}" if state else name)
         bbox = bbox_from_center(center, args.radius_km)
 
+    # curated metros are vetted — skip the area/graph guardrails for them
+    vetted = args.force or (curated is not None and not args.bbox)
     area = area_deg2(bbox)
     zoom = args.zoom or zoom_for(bbox)
     print(f"City:   {name}, {state}  ({slug})")
@@ -171,7 +191,7 @@ def main():
         problems.append(f"only {alpr} mapped ALPRs (need ≥ {MIN_ALPR})")
     if area > MAX_AREA_DEG2:
         problems.append(f"bbox is large ({area:.3f} deg^2 > {MAX_AREA_DEG2}); tighten it or lower --radius-km")
-    if problems and not args.force:
+    if problems and not vetted:
         raise SystemExit("Skipping — " + "; ".join(problems) + ".  (Pass --force to override.)")
 
     entry = {"name": name, "state": state, "bbox": bbox, "center": center, "zoom": zoom, "presets": []}
@@ -188,7 +208,7 @@ def main():
         run("extract_overture.py", slug)
         run("build_graph.py", slug)
         gz = graph_gz_mb(slug)
-        if gz > MAX_GRAPH_MB and not args.force:
+        if gz > MAX_GRAPH_MB and not vetted:
             raise SystemExit(f"graph is {gz:.1f} MB gz (> {MAX_GRAPH_MB}); tighten the bbox.")
         # persist the built counts into the registry so the index can be rebuilt
         # from the registry alone (CI never has the other cities' data on disk).
