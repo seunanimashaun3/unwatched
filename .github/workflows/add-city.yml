@@ -1,26 +1,23 @@
-name: Add a city
+name: Add cities
 
-# Manually add a supported city: Actions -> "Add a city" -> Run workflow.
-# It geocodes, checks camera coverage + size, builds the graph, and commits —
-# which triggers Render to deploy. No local setup needed.
+# Add one or many supported cities: Actions -> "Add cities" -> Run workflow.
+# Paste cities (one per line or semicolon-separated). Each is geocoded, coverage
+# + size checked, built, and uploaded to R2 — thin/failed ones are skipped, the
+# rest go live. Only the small registry (cities.json) is committed.
 on:
   workflow_dispatch:
     inputs:
-      city:
-        description: 'City, State — e.g. "Austin, TX"'
+      cities:
+        description: 'Cities — one per line or semicolon-separated (e.g. "New York, NY; Houston, TX")'
         required: true
         type: string
-      bbox:
-        description: '(optional) bounding box "W,S,E,N" — blank = auto-derive from the city center'
-        required: false
-        type: string
       radius_km:
-        description: '(optional) half-width of the auto box in km'
+        description: "auto-box half-width in km, applied to all"
         required: false
         default: "8"
         type: string
       force:
-        description: "bypass coverage/size guardrails (for vetted large metros)"
+        description: "bypass coverage/size guardrails (vetted metros only)"
         required: false
         default: false
         type: boolean
@@ -36,6 +33,7 @@ concurrency:
 jobs:
   add:
     runs-on: ubuntu-latest
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -43,17 +41,34 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements.txt
 
-      - name: Add city
+      - name: Add cities
         env:
-          CITY: ${{ inputs.city }}
-          BBOX: ${{ inputs.bbox }}
+          CITIES: ${{ inputs.cities }}
           RADIUS: ${{ inputs.radius_km }}
           FORCE: ${{ inputs.force }}
         run: |
-          args=(--name "$CITY" --radius-km "$RADIUS")
-          [ -n "$BBOX" ] && args+=(--bbox="$BBOX")
-          [ "$FORCE" = "true" ] && args+=(--force)
-          python scripts/add_city.py "${args[@]}"
+          added="" ; skipped=""
+          # split the input on both newlines and semicolons
+          while IFS= read -r raw; do
+            city="$(printf '%s' "$raw" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+            [ -z "$city" ] && continue
+            args=(--name "$city" --radius-km "$RADIUS")
+            [ "$FORCE" = "true" ] && args+=(--force)
+            echo "::group::$city"
+            if python scripts/add_city.py "${args[@]}"; then
+              added="$added"$'\n'"  ✅ $city"
+            else
+              skipped="$skipped"$'\n'"  ⏭️ $city"
+            fi
+            echo "::endgroup::"
+          done < <(printf '%s' "$CITIES" | tr ';' '\n')
+          {
+            echo "### Add cities"
+            echo "**Added:**${added:-  (none)}"
+            echo ""
+            echo "**Skipped (thin coverage / error / already exists):**${skipped:-  (none)}"
+          } >> "$GITHUB_STEP_SUMMARY"
+          printf 'Added:%s\nSkipped:%s\n' "$added" "$skipped"
 
       - name: Upload data to R2
         env:
@@ -70,6 +85,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No registry changes to commit."
           else
-            git commit -m "Add city: ${{ inputs.city }}"
+            git commit -m "Add cities"
             git push
           fi
