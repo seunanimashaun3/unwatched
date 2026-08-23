@@ -1,8 +1,9 @@
-import type { RouteResult } from "@/lib/types";
+import type { Camera, RouteResult } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { fmtDuration } from "@/lib/geo";
 import { summarizeRoutes } from "@/lib/verdict";
 import RouteCard from "@/components/RouteCard";
+import CommuteExposure from "@/components/CommuteExposure";
 
 export function Verdict({
   tone = "neutral",
@@ -35,11 +36,15 @@ export default function Results({
   priv,
   selected = "private",
   onSelectRoute,
+  cameras,
+  city,
 }: {
   fast: RouteResult;
   priv: RouteResult;
   selected?: SelectedRoute;
   onSelectRoute?: (r: SelectedRoute) => void;
+  cameras?: Camera[];
+  city?: string;
 }) {
   const v = summarizeRoutes(fast, priv);
 
@@ -90,6 +95,10 @@ export default function Results({
         </Verdict>
       ) : (
         <Verdict>No detour avoids more cameras than the fastest route already does.</Verdict>
+      )}
+
+      {cameras && city && (
+        <CommuteExposure route={selected === "fast" ? fast : priv} cameras={cameras} city={city} />
       )}
     </>
   );

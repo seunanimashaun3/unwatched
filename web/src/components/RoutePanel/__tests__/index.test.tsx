@@ -18,6 +18,8 @@ function setup(overrides: Partial<React.ComponentProps<typeof RoutePanel>> = {})
     setArm: vi.fn(),
     near: [-122.43, 37.77],
     presets: PRESETS,
+    cameras: [],
+    city: "San Francisco",
     onSelect: vi.fn(),
     onClear: vi.fn(),
     penaltyS: 90,

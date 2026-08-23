@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronLeft, Loader2, LocateFixed, Navigation2, SlidersHorizontal, X } from "lucide-react";
 import type { Exposure } from "@/lib/exposure";
-import type { LngLat, Preset, RouteResponse } from "@/lib/types";
+import type { Camera, LngLat, Preset, RouteResponse } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { detourLabel } from "@/lib/verdict";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,8 @@ export interface MobilePanelProps {
   notice?: string | null;
   onDismissNotice?: () => void;
   presets: Preset[];
+  cameras: Camera[];
+  city: string;
   onSelect: (kind: "a" | "b", p: LngLat, label: string) => void;
   onClear: (kind: "a" | "b") => void;
   penaltyS: number;
@@ -187,6 +189,8 @@ export default function MobilePanel(props: MobilePanelProps) {
                       priv={props.result!.private!}
                       selected={props.selectedRoute}
                       onSelectRoute={props.onSelectRoute}
+                      cameras={props.cameras}
+                      city={props.city}
                     />
                   </div>
 

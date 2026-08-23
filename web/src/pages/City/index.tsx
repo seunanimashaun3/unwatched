@@ -360,6 +360,8 @@ export default function City({
             onSelectRoute={setSelectedRoute}
             applyPreset={applyPreset}
             reset={reset}
+            cameras={cameras}
+            city={meta.city}
             onLocate={onLocate}
             locating={locating}
             onStartDrive={onStartDriving}
@@ -402,6 +404,8 @@ export default function City({
                 onSelectRoute={setSelectedRoute}
                 applyPreset={applyPreset}
                 reset={reset}
+                cameras={cameras}
+                city={meta.city}
               />
             ) : (
               <ExposurePanel exposure={exposure} />

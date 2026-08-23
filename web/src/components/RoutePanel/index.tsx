@@ -1,5 +1,5 @@
 import { Loader2, X } from "lucide-react";
-import type { LngLat, Preset, RouteResponse } from "@/lib/types";
+import type { Camera, LngLat, Preset, RouteResponse } from "@/lib/types";
 import { detourLabel } from "@/lib/verdict";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -39,6 +39,8 @@ export default function RoutePanel({
   onSelectRoute,
   applyPreset,
   reset,
+  cameras,
+  city,
 }: {
   start: LngLat | null;
   end: LngLat | null;
@@ -50,6 +52,8 @@ export default function RoutePanel({
   notice?: string | null;
   onDismissNotice?: () => void;
   presets: Preset[];
+  cameras: Camera[];
+  city: string;
   onSelect: (kind: "a" | "b", point: LngLat, label: string) => void;
   onClear: (kind: "a" | "b") => void;
   penaltyS: number;
@@ -112,7 +116,7 @@ export default function RoutePanel({
       {!routing && result && !result.ok && <Verdict role="alert">{result.reason}</Verdict>}
 
       {!routing && result?.ok && result.fast && result.private && (
-        <Results fast={result.fast} priv={result.private} selected={selectedRoute} onSelectRoute={onSelectRoute} />
+        <Results fast={result.fast} priv={result.private} selected={selectedRoute} onSelectRoute={onSelectRoute} cameras={cameras} city={city} />
       )}
 
       <div className="mt-5">
