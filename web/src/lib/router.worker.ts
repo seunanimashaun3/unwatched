@@ -1,15 +1,15 @@
 /// <reference lib="webworker" />
 import type { CameraData, Graph, RouteRequest } from "./types";
 import { RouteEngine } from "./routing";
+import { dataUrl } from "./dataBase";
 
 let engine: RouteEngine | null = null;
 
 async function load(slug: string) {
   engine = null;
-  const base = import.meta.env.BASE_URL || "/";
   const [g, c] = await Promise.all([
-    fetch(`${base}data/${slug}/graph.json`).then((r) => r.json() as Promise<Graph>),
-    fetch(`${base}data/${slug}/cameras.json`).then((r) => r.json() as Promise<CameraData>),
+    fetch(dataUrl(`${slug}/graph.json`)).then((r) => r.json() as Promise<Graph>),
+    fetch(dataUrl(`${slug}/cameras.json`)).then((r) => r.json() as Promise<CameraData>),
   ]);
   const camIsAlpr = new Uint8Array(c.cameras.length);
   c.cameras.forEach((cam, i) => (camIsAlpr[i] = cam[2] ? 1 : 0));
