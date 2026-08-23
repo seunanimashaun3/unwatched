@@ -474,24 +474,24 @@
     "name": "Seattle",
     "state": "WA",
     "bbox": [
-      -122.42,
-      47.43,
-      -122.24,
-      47.74
+      -122.45,
+      47.25,
+      -122.02,
+      47.8
     ],
     "center": [
-      -122.33,
-      47.585
+      -122.235,
+      47.525
     ],
-    "zoom": 9.7,
+    "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 139352,
-      "edges": 164583,
-      "cameras": 1473,
-      "alpr": 180,
-      "flock": 94,
-      "watchedEdges": 4059
+      "nodes": 370065,
+      "edges": 437532,
+      "cameras": 2386,
+      "alpr": 600,
+      "flock": 414,
+      "watchedEdges": 9271
     }
   },
   "miami-fl": {
@@ -588,6 +588,78 @@
       "alpr": 219,
       "flock": 150,
       "watchedEdges": 2628
+    }
+  },
+  "los-angeles-ca": {
+    "name": "Los Angeles",
+    "state": "CA",
+    "bbox": [
+      -118.6,
+      33.73,
+      -118.08,
+      34.28
+    ],
+    "center": [
+      -118.34,
+      34.005
+    ],
+    "zoom": 9.5,
+    "presets": [],
+    "counts": {
+      "nodes": 559669,
+      "edges": 700807,
+      "cameras": 2351,
+      "alpr": 2167,
+      "flock": 1445,
+      "watchedEdges": 8901
+    }
+  },
+  "austin-tx": {
+    "name": "Austin",
+    "state": "TX",
+    "bbox": [
+      -97.95,
+      30.13,
+      -97.55,
+      30.52
+    ],
+    "center": [
+      -97.75,
+      30.325
+    ],
+    "zoom": 9.5,
+    "presets": [],
+    "counts": {
+      "nodes": 222411,
+      "edges": 278154,
+      "cameras": 626,
+      "alpr": 531,
+      "flock": 479,
+      "watchedEdges": 2264
+    }
+  },
+  "salt-lake-city-ut": {
+    "name": "Salt Lake City",
+    "state": "UT",
+    "bbox": [
+      -112.1,
+      40.5,
+      -111.8,
+      40.9
+    ],
+    "center": [
+      -111.95,
+      40.7
+    ],
+    "zoom": 9.5,
+    "presets": [],
+    "counts": {
+      "nodes": 211859,
+      "edges": 259141,
+      "cameras": 733,
+      "alpr": 423,
+      "flock": 270,
+      "watchedEdges": 2754
     }
   }
 }
