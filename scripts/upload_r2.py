@@ -27,12 +27,15 @@ BUCKET = os.environ.get("R2_BUCKET", "unwatched-data")
 
 
 def client():
-    acct = os.environ["R2_ACCOUNT_ID"]
+    # tolerate the account id being pasted as a bare id, a hostname, or a full
+    # URL — normalize down to just the 32-char account id.
+    acct = os.environ["R2_ACCOUNT_ID"].strip()
+    acct = acct.replace("https://", "").replace("http://", "").split(".")[0].strip("/")
     return boto3.client(
         "s3",
         endpoint_url=f"https://{acct}.r2.cloudflarestorage.com",
-        aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
-        aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
+        aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"].strip(),
+        aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"].strip(),
         region_name="auto",
     )
 
