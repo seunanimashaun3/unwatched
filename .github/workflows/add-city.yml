@@ -55,7 +55,9 @@ jobs:
             args=(--name "$city" --radius-km "$RADIUS")
             [ "$FORCE" = "true" ] && args+=(--force)
             echo "::group::$city"
-            if python scripts/add_city.py "${args[@]}"; then
+            # </dev/null so a subprocess (duckdb/overpass) can't drain the
+            # loop's stdin and end it early after the first city.
+            if python scripts/add_city.py "${args[@]}" </dev/null; then
               added="$added"$'\n'"  ✅ $city"
             else
               skipped="$skipped"$'\n'"  ⏭️ $city"
