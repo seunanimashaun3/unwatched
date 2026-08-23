@@ -213,21 +213,24 @@
     "name": "Las Vegas",
     "state": "NV",
     "bbox": [
-      -115.28,
-      36.06,
+      -115.35,
+      36.03,
       -115.05,
-      36.23
+      36.3
     ],
     "center": [
-      -115.16,
-      36.145
+      -115.2,
+      36.165
     ],
-    "zoom": 11.2,
+    "zoom": 9.7,
     "presets": [],
     "counts": {
-      "alpr": 273,
-      "cameras": 291,
-      "flock": 170
+      "nodes": 199342,
+      "edges": 261552,
+      "cameras": 446,
+      "alpr": 425,
+      "flock": 302,
+      "watchedEdges": 1645
     }
   },
   "denver-co": {
