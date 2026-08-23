@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import SearchBox from "@/components/SearchBox";
-import type { Bbox } from "@/lib/geocode";
+import type { LngLat } from "@/lib/types";
 
-const SF: Bbox = [-122.52, 37.7, -122.35, 37.83];
+const NEAR: LngLat = [-122.43, 37.77];
 
 function baseProps(overrides = {}) {
   return {
@@ -12,7 +12,7 @@ function baseProps(overrides = {}) {
     label: "Start",
     valueLabel: null as string | null,
     armed: false,
-    bbox: SF,
+    near: NEAR,
     onArm: vi.fn(),
     onSelect: vi.fn(),
     onClear: vi.fn(),

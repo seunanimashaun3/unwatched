@@ -16,7 +16,7 @@ function setup(overrides: Partial<React.ComponentProps<typeof RoutePanel>> = {})
     endLabel: null,
     arm: "a",
     setArm: vi.fn(),
-    bbox: [-122.52, 37.7, -122.35, 37.83],
+    near: [-122.43, 37.77],
     presets: PRESETS,
     onSelect: vi.fn(),
     onClear: vi.fn(),

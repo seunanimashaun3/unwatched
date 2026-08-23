@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Camera, CityIndexEntry, LngLat, Meta } from "@/lib/types";
+import type { Camera, CityIndexEntry, LngLat, Meta, PendingPoint } from "@/lib/types";
 import { computeExposure, type Exposure } from "@/lib/exposure";
 import { fetchCityCameras, fetchCityMeta } from "@/lib/cities";
 import { fmtPoint } from "@/lib/presets";
-import { fmtCamera, nearestCamera } from "@/lib/proximity";
+import { cityForPoint, fmtCamera, inBbox, nearestCamera } from "@/lib/proximity";
 import { primeAudio, releaseWakeLock, requestWakeLock } from "@/lib/alerts";
 import { useRouter } from "@/hooks/useRouter";
 import { useGeolocation } from "@/hooks/useGeolocation";
@@ -26,15 +26,20 @@ import CitySwitcher from "@/components/CitySwitcher";
 export default function City({
   slug,
   cities,
+  pending,
   onCityChange,
+  onExit,
 }: {
   slug: string;
   cities: CityIndexEntry[];
-  onCityChange: (slug: string) => void;
+  pending?: PendingPoint | null;
+  onCityChange: (slug: string, pending?: PendingPoint) => void;
+  onExit: () => void;
 }) {
   const [meta, setMeta] = useState<Meta | null>(null);
   const [cameras, setCameras] = useState<Camera[]>([]);
   const [notFound, setNotFound] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const [mode, setMode] = useState<Mode>("route");
   const [arm, setArm] = useState<Arm>("a");
@@ -84,6 +89,23 @@ export default function City({
   }, [slug]);
 
   const flyTo = (p: LngLat) => setFocus({ point: p, nonce: ++nonce.current });
+
+  // A search result carried in from the Overview (or another city): drop it as
+  // the given endpoint once this city's data has loaded.
+  useEffect(() => {
+    if (!meta || !pending) return;
+    if (pending.kind === "b") {
+      setEnd(pending.point);
+      setEndLabel(pending.label);
+      setArm("a");
+    } else {
+      setStart(pending.point);
+      setStartLabel(pending.label);
+      setArm("b");
+    }
+    flyTo(pending.point);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meta]);
 
   // ---- Tier 1: use my current location as the start point ----
   const onLocate = () => {
@@ -147,6 +169,22 @@ export default function City({
   }, []);
 
   const onSelect = (kind: "a" | "b", p: LngLat, label: string) => {
+    setNotice(null);
+    // A global search can land outside this city. If the point falls in another
+    // supported city, hop there (carrying the point); if it's in no supported
+    // city, say so instead of snapping to a nonsense node in this graph.
+    if (meta && !inBbox(p, meta.bbox)) {
+      const target = cityForPoint(p, cities);
+      if (target && target.slug !== slug) {
+        onCityChange(target.slug, { kind, point: p, label });
+        return;
+      }
+      if (!target) {
+        setNotice(`“${label}” isn’t in a supported city yet.`);
+        return;
+      }
+      // target is this city (just past the bbox margin) — fall through and set it
+    }
     if (kind === "a") {
       setStart(p);
       setStartLabel(label);
@@ -295,13 +333,16 @@ export default function City({
             mode={mode}
             onMode={switchMode}
             citySwitcher={citySwitcher}
+            onExit={onExit}
             start={start}
             end={end}
             startLabel={startLabel}
             endLabel={endLabel}
             arm={arm}
             setArm={setArm}
-            bbox={meta.bbox}
+            near={meta.center}
+            notice={notice}
+            onDismissNotice={() => setNotice(null)}
             presets={meta.presets}
             onSelect={onSelect}
             onClear={onClear}
@@ -321,7 +362,7 @@ export default function City({
             exposure={exposure}
           />
         ) : (
-          <Panel mode={mode} onMode={switchMode} meta={meta} citySwitcher={citySwitcher}>
+          <Panel mode={mode} onMode={switchMode} meta={meta} citySwitcher={citySwitcher} onExit={onExit}>
             <DriveControls
               locating={locating}
               driveMode={driveMode}
@@ -341,7 +382,9 @@ export default function City({
                 endLabel={endLabel}
                 arm={arm}
                 setArm={setArm}
-                bbox={meta.bbox}
+                near={meta.center}
+                notice={notice}
+                onDismissNotice={() => setNotice(null)}
                 presets={meta.presets}
                 onSelect={onSelect}
                 onClear={onClear}

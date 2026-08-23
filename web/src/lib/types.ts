@@ -1,5 +1,8 @@
 export type LngLat = [number, number];
 
+/** An endpoint carried across a city switch (from a global search result). */
+export type PendingPoint = { kind: "a" | "b"; point: LngLat; label: string };
+
 /** Compact edge: [u, v, distMeters, timeS*10, classCode, oneway(0|1|2)]. */
 export type Edge = [number, number, number, number, number, number];
 

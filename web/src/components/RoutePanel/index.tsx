@@ -1,6 +1,5 @@
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import type { LngLat, Preset, RouteResponse } from "@/lib/types";
-import type { Bbox } from "@/lib/geocode";
 import { detourLabel } from "@/lib/verdict";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -24,7 +23,9 @@ export default function RoutePanel({
   endLabel,
   arm,
   setArm,
-  bbox,
+  near,
+  notice,
+  onDismissNotice,
   presets,
   onSelect,
   onClear,
@@ -45,7 +46,9 @@ export default function RoutePanel({
   endLabel: string | null;
   arm: Arm;
   setArm: (a: Arm) => void;
-  bbox: Bbox;
+  near: LngLat;
+  notice?: string | null;
+  onDismissNotice?: () => void;
   presets: Preset[];
   onSelect: (kind: "a" | "b", point: LngLat, label: string) => void;
   onClear: (kind: "a" | "b") => void;
@@ -63,8 +66,21 @@ export default function RoutePanel({
   return (
     <>
       <SectionLabel>Route</SectionLabel>
-      <SearchBox kind="a" label="Start" valueLabel={startLabel} armed={arm === "a"} bbox={bbox} onArm={() => setArm("a")} onSelect={(p, l) => onSelect("a", p, l)} onClear={() => onClear("a")} />
-      <SearchBox kind="b" label="Destination" valueLabel={endLabel} armed={arm === "b"} bbox={bbox} onArm={() => setArm("b")} onSelect={(p, l) => onSelect("b", p, l)} onClear={() => onClear("b")} />
+      <SearchBox kind="a" label="Start" valueLabel={startLabel} armed={arm === "a"} near={near} onArm={() => setArm("a")} onSelect={(p, l) => onSelect("a", p, l)} onClear={() => onClear("a")} />
+      <SearchBox kind="b" label="Destination" valueLabel={endLabel} armed={arm === "b"} near={near} onArm={() => setArm("b")} onSelect={(p, l) => onSelect("b", p, l)} onClear={() => onClear("b")} />
+
+      {notice && (
+        <Verdict role="alert">
+          <span className="flex items-start gap-2">
+            <span className="flex-1">{notice}</span>
+            {onDismissNotice && (
+              <button onClick={onDismissNotice} aria-label="Dismiss" className="mt-0.5 shrink-0 text-faint hover:text-foreground">
+                <X className="size-3.5" />
+              </button>
+            )}
+          </span>
+        </Verdict>
+      )}
 
       {!start && !end && presets.length > 0 && (
         <div className="mb-3.5 mt-0.5">

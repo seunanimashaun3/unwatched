@@ -3,14 +3,14 @@ import { Loader2, LocateFixed, X } from "lucide-react";
 import type { LngLat } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { geocode, type Bbox, type GeoResult } from "@/lib/geocode";
+import { geocode, type GeoResult } from "@/lib/geocode";
 
 export default function SearchBox({
   kind,
   label,
   valueLabel,
   armed,
-  bbox,
+  near,
   onArm,
   onSelect,
   onClear,
@@ -21,7 +21,7 @@ export default function SearchBox({
   label: string;
   valueLabel: string | null;
   armed: boolean;
-  bbox: Bbox;
+  near: LngLat;
   onArm: () => void;
   onSelect: (point: LngLat, label: string) => void;
   onClear: () => void;
@@ -44,7 +44,7 @@ export default function SearchBox({
     const ctrl = new AbortController();
     setLoading(true);
     const t = setTimeout(async () => {
-      const r = await geocode(query, bbox, ctrl.signal);
+      const r = await geocode(query, near, ctrl.signal);
       setResults(r);
       setActive(-1);
       setLoading(false);
@@ -53,7 +53,7 @@ export default function SearchBox({
       clearTimeout(t);
       ctrl.abort();
     };
-  }, [query, focused, bbox]);
+  }, [query, focused, near]);
 
   const shown = focused ? query : (valueLabel ?? "");
   const open = focused && (results.length > 0 || loading);

@@ -1,8 +1,7 @@
 import { useState, type ReactNode } from "react";
-import { ChevronDown, Loader2, LocateFixed, Navigation2, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ChevronLeft, Loader2, LocateFixed, Navigation2, SlidersHorizontal, X } from "lucide-react";
 import type { Exposure } from "@/lib/exposure";
 import type { LngLat, Preset, RouteResponse } from "@/lib/types";
-import type { Bbox } from "@/lib/geocode";
 import { cn } from "@/lib/utils";
 import { detourLabel } from "@/lib/verdict";
 import { Button } from "@/components/ui/button";
@@ -21,13 +20,16 @@ export interface MobilePanelProps {
   mode: Mode;
   onMode: (m: Mode) => void;
   citySwitcher: ReactNode;
+  onExit?: () => void;
   start: LngLat | null;
   end: LngLat | null;
   startLabel: string | null;
   endLabel: string | null;
   arm: Arm;
   setArm: (a: Arm) => void;
-  bbox: Bbox;
+  near: LngLat;
+  notice?: string | null;
+  onDismissNotice?: () => void;
   presets: Preset[];
   onSelect: (kind: "a" | "b", p: LngLat, label: string) => void;
   onClear: (kind: "a" | "b") => void;
@@ -76,10 +78,25 @@ export default function MobilePanel(props: MobilePanelProps) {
         <span className="h-1.5 w-10 rounded-full bg-foreground/25" />
       </button>
 
-      <div className="flex shrink-0 items-center gap-2 px-4 pb-2.5">
-        <span className="size-2.5 rounded-full bg-alert" />
-        <span className="font-display text-[16px] font-bold tracking-tight">Unwatched</span>
-        <div className="ml-auto flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1.5 px-4 pb-2.5">
+        {props.onExit ? (
+          <button
+            type="button"
+            onClick={props.onExit}
+            aria-label="Back to all cities"
+            className="-ml-1 flex items-center gap-1.5 rounded-lg px-1 py-0.5"
+          >
+            <ChevronLeft className="size-4 shrink-0 text-faint" />
+            <span className="size-2.5 rounded-full bg-alert" />
+            <span className="font-display text-[16px] font-bold tracking-tight">Unwatched</span>
+          </button>
+        ) : (
+          <>
+            <span className="size-2.5 rounded-full bg-alert" />
+            <span className="font-display text-[16px] font-bold tracking-tight">Unwatched</span>
+          </>
+        )}
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           {props.citySwitcher}
           <ThemeToggle />
           <button
@@ -109,7 +126,7 @@ export default function MobilePanel(props: MobilePanelProps) {
                 label="Start"
                 valueLabel={props.startLabel}
                 armed={props.arm === "a"}
-                bbox={props.bbox}
+                near={props.near}
                 onArm={() => props.setArm("a")}
                 onSelect={(p, l) => props.onSelect("a", p, l)}
                 onClear={() => props.onClear("a")}
@@ -119,11 +136,24 @@ export default function MobilePanel(props: MobilePanelProps) {
                 label="Destination"
                 valueLabel={props.endLabel}
                 armed={props.arm === "b"}
-                bbox={props.bbox}
+                near={props.near}
                 onArm={() => props.setArm("b")}
                 onSelect={(p, l) => props.onSelect("b", p, l)}
                 onClear={() => props.onClear("b")}
               />
+
+              {props.notice && (
+                <Verdict role="alert">
+                  <span className="flex items-start gap-2">
+                    <span className="flex-1">{props.notice}</span>
+                    {props.onDismissNotice && (
+                      <button onClick={props.onDismissNotice} aria-label="Dismiss" className="mt-0.5 shrink-0 text-faint hover:text-foreground">
+                        <X className="size-3.5" />
+                      </button>
+                    )}
+                  </span>
+                </Verdict>
+              )}
 
               {!props.start && !props.end && props.presets.length > 0 && (
                 <div className="mt-1 flex flex-wrap gap-1.5">

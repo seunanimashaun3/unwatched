@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { geocode, type Bbox } from "./geocode";
+import { geocode } from "./geocode";
+import type { LngLat } from "./types";
 
-const SF: Bbox = [-122.52, 37.7, -122.35, 37.83];
+const NEAR: LngLat = [-122.43, 37.77]; // bias point (San Francisco)
 
 function mockPhoton(features: unknown[]) {
   vi.stubGlobal(
@@ -21,7 +22,7 @@ describe("geocode", () => {
   it("returns nothing for queries shorter than 3 chars (no request)", async () => {
     const spy = vi.fn();
     vi.stubGlobal("fetch", spy);
-    expect(await geocode("ab", SF)).toEqual([]);
+    expect(await geocode("ab", NEAR)).toEqual([]);
     expect(spy).not.toHaveBeenCalled();
   });
 
@@ -29,7 +30,7 @@ describe("geocode", () => {
     mockPhoton([
       feature(-122.42, 37.77, { name: "Ferry Building", city: "San Francisco", state: "California" }),
     ]);
-    const r = await geocode("ferry", SF);
+    const r = await geocode("ferry", NEAR);
     expect(r).toHaveLength(1);
     expect(r[0].point).toEqual([-122.42, 37.77]);
     expect(r[0].label).toMatch(/Ferry Building/);
@@ -39,18 +40,18 @@ describe("geocode", () => {
     mockPhoton([
       feature(-122.41, 37.76, { housenumber: "1", street: "Dolores St", city: "San Francisco" }),
     ]);
-    const r = await geocode("1 dolores", SF);
+    const r = await geocode("1 dolores", NEAR);
     expect(r[0].label).toMatch(/1 Dolores St/);
   });
 
-  it("drops results outside the city bbox", async () => {
+  it("searches globally — results far from the bias point are kept", async () => {
     mockPhoton([
       feature(-122.42, 37.77, { name: "In town" }),
-      feature(-100.0, 40.0, { name: "Far away" }),
+      feature(-73.99, 40.73, { name: "New York place" }),
     ]);
-    const r = await geocode("place", SF);
-    expect(r).toHaveLength(1);
-    expect(r[0].label).toBe("In town");
+    const r = await geocode("place", NEAR);
+    expect(r).toHaveLength(2);
+    expect(r.map((x) => x.label)).toContain("New York place");
   });
 
   it("returns [] on network error rather than throwing", async () => {
@@ -60,6 +61,6 @@ describe("geocode", () => {
         throw new Error("network");
       }),
     );
-    await expect(geocode("anything", SF)).resolves.toEqual([]);
+    await expect(geocode("anything", NEAR)).resolves.toEqual([]);
   });
 });

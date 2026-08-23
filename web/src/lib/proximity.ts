@@ -49,6 +49,21 @@ export function nearestCity(pos: LngLat, cities: CityIndexEntry[]): CityIndexEnt
   return best;
 }
 
+/**
+ * Which supported city does a searched point belong to? Returns the nearest
+ * city whose center is within `maxKm` (metro-scale), else null ("not covered").
+ * Used to route a global search result into the right city graph.
+ */
+export function cityForPoint(
+  pos: LngLat,
+  cities: CityIndexEntry[],
+  maxKm = 70,
+): CityIndexEntry | null {
+  const c = nearestCity(pos, cities);
+  if (!c) return null;
+  return haversine(pos, c.center) <= maxKm * 1000 ? c : null;
+}
+
 /** Is a point inside (or near) a city's [W,S,E,N] bbox? */
 export function inBbox(pos: LngLat, bbox: [number, number, number, number], marginDeg = 0.02): boolean {
   const [w, s, e, n] = bbox;

@@ -8,31 +8,30 @@ export interface GeoResult {
 export type Bbox = [number, number, number, number]; // [W, S, E, N]
 
 /**
- * Geocode a free-text query to places, biased to a city bounding box, using
- * Photon (Komoot) — keyless, CORS-friendly, autocomplete-oriented. Returns a
- * short ranked list. Errors resolve to [] so the UI degrades gracefully.
+ * Geocode a free-text query to places using Photon (Komoot) — keyless,
+ * CORS-friendly, autocomplete-oriented. Searches globally, biased toward
+ * `near` [lon, lat] so nearby results rank first (but anywhere is reachable, so
+ * you can find your real location even if the app is showing another city).
+ * Errors resolve to [] so the UI degrades gracefully.
  */
 export async function geocode(
   query: string,
-  bbox: Bbox,
+  near: LngLat,
   signal?: AbortSignal,
 ): Promise<GeoResult[]> {
   const q = query.trim();
   if (q.length < 3) return [];
-  const [w, s, e, n] = bbox;
-  const lat = (s + n) / 2;
-  const lon = (w + e) / 2;
+  const [lon, lat] = near;
   const url =
     `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}` +
-    `&limit=6&lang=en&lat=${lat}&lon=${lon}&bbox=${w},${s},${e},${n}`;
+    `&limit=6&lang=en&lat=${lat}&lon=${lon}`;
   try {
     const r = await fetch(url, { signal });
     if (!r.ok) return [];
     const data = await r.json();
     return (data.features || [])
       .map(toResult)
-      .filter((res: GeoResult | null): res is GeoResult => res !== null)
-      .filter((res: GeoResult) => inBox(res.point, bbox));
+      .filter((res: GeoResult | null): res is GeoResult => res !== null);
   } catch {
     return []; // aborted or network error — caller shows "no results"
   }
@@ -70,8 +69,4 @@ export async function reverseGeocode(
   } catch {
     return null;
   }
-}
-
-function inBox(p: LngLat, [w, s, e, n]: Bbox): boolean {
-  return p[0] >= w && p[0] <= e && p[1] >= s && p[1] <= n;
 }

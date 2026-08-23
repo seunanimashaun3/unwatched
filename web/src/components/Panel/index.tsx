@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { ChevronLeft } from "lucide-react";
 import type { Meta } from "@/lib/types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MetaNote from "@/components/MetaNote";
@@ -18,24 +19,44 @@ export default function Panel({
   onMode,
   meta,
   citySwitcher,
+  onExit,
   children,
 }: {
   mode: Mode;
   onMode: (m: Mode) => void;
   meta: Meta | null;
   citySwitcher?: ReactNode;
+  onExit?: () => void;
   children: ReactNode;
 }) {
   return (
     <div className="glass scroll-thin fixed left-4 top-4 z-10 max-h-[calc(100dvh-2rem)] w-[372px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl border border-border shadow-2xl">
       <div className="px-[18px] pb-5 pt-[18px]">
-        <div className="flex items-center gap-2.5">
-          <span
-            className="size-2.5 shrink-0 rounded-full bg-alert"
-            style={{ boxShadow: "0 0 0 4px rgba(255,77,94,0.18)" }}
-          />
-          <h1 className="text-[22px] font-bold tracking-tight">Unwatched</h1>
-          <div className="ml-auto flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          {onExit ? (
+            <button
+              type="button"
+              onClick={onExit}
+              aria-label="Back to all cities"
+              className="group -ml-1 flex min-w-0 items-center gap-1.5 rounded-lg px-1 py-0.5 transition-colors hover:bg-accent"
+            >
+              <ChevronLeft className="size-4 shrink-0 text-faint transition-colors group-hover:text-foreground" />
+              <span
+                className="size-2.5 shrink-0 rounded-full bg-alert"
+                style={{ boxShadow: "0 0 0 4px rgba(255,77,94,0.18)" }}
+              />
+              <h1 className="text-[22px] font-bold tracking-tight">Unwatched</h1>
+            </button>
+          ) : (
+            <>
+              <span
+                className="size-2.5 shrink-0 rounded-full bg-alert"
+                style={{ boxShadow: "0 0 0 4px rgba(255,77,94,0.18)" }}
+              />
+              <h1 className="text-[22px] font-bold tracking-tight">Unwatched</h1>
+            </>
+          )}
+          <div className="ml-auto flex shrink-0 items-center gap-2">
             {citySwitcher}
             <ThemeToggle />
           </div>
