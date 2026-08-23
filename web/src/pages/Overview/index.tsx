@@ -51,8 +51,9 @@ export default function Overview({
         }
         const m = mapObj.current;
         if (m) {
-          m.flyTo({ center: f.point, zoom: 11, duration: 1600, essential: true });
-          window.setTimeout(() => enterRef.current(c.slug), 1500);
+          // end at the city's own center/zoom so the hand-off is seamless
+          m.flyTo({ center: c.center as [number, number], zoom: c.zoom, duration: 1900, essential: true });
+          window.setTimeout(() => enterRef.current(c.slug), 1750);
         } else {
           enterRef.current(c.slug);
         }
@@ -85,15 +86,11 @@ export default function Overview({
         el.innerHTML =
           `<span class="city-pin-dot"></span>` +
           `<span class="city-pin-label">${c.city}<b>${c.counts.alpr.toLocaleString()} cams</b></span>`;
-        // smooth zoom into the city, then hand off to its planner
+        // smooth zoom into the city — end exactly where the City view opens
+        // (its center/zoom) so the hand-off doesn't jump
         el.addEventListener("click", () => {
-          map.flyTo({
-            center: c.center as [number, number],
-            zoom: Math.max(map.getZoom(), 9.8),
-            duration: 1400,
-            essential: true,
-          });
-          window.setTimeout(() => enterRef.current(c.slug), 1350);
+          map.flyTo({ center: c.center as [number, number], zoom: c.zoom, duration: 1900, essential: true });
+          window.setTimeout(() => enterRef.current(c.slug), 1750);
         });
         new maplibregl.Marker({ element: el, anchor: "bottom" })
           .setLngLat(c.center as [number, number])

@@ -281,7 +281,7 @@ export default function City({
       : [];
 
   return (
-    <>
+    <div className="animate-cityIn">
       <MapView
         cameras={cameras}
         theme={theme}
@@ -410,6 +410,6 @@ export default function City({
         ))}
 
       {!driving && <Legend alprOnly={alprOnly} />}
-    </>
+    </div>
   );
 }

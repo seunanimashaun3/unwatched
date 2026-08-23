@@ -162,6 +162,19 @@
   }
 }
 
+/* City view eases in so the overview→city map hand-off crossfades. */
+@keyframes cityIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-cityIn {
+  animation: cityIn 600ms ease both;
+}
+
 /* Landing-map pins: one labelled chip per supported city. */
 .city-pin {
   display: flex;
