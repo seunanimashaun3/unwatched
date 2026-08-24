@@ -109,7 +109,16 @@ def fetch_acs(geoids):
     for (st, co) in counties:
         url = (f"{ACS}?get={','.join(ACS_VARS)}&for=tract:*"
                f"&in=state:{st}&in=county:{co}&key={key}")
-        rows = json.loads(_get(url))
+        try:
+            body = _get(url)
+            rows = json.loads(body)
+        except Exception as e:  # noqa: BLE001
+            snippet = body[:200].decode("utf-8", "replace") if isinstance(locals().get("body"), bytes) else ""
+            print(f"  ! ACS request failed for {st}/{co}: {e}", file=sys.stderr)
+            print(f"    response: {snippet!r}", file=sys.stderr)
+            print("    → skipping ACS layers. Is the Census key ACTIVATED "
+                  "(click the link in the signup email)?", file=sys.stderr)
+            return {}
         head = rows[0]
         idx = {name: i for i, name in enumerate(head)}
         for row in rows[1:]:
