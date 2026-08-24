@@ -63,8 +63,10 @@ def main():
     files = files_for(sys.argv[1:])
     for p in files:
         key = str(p.relative_to(DATA))
-        # short cache on the index so new cities show up; long on heavy blobs
-        cache = "public, max-age=300" if p.name == "cities.json" else "public, max-age=86400"
+        # short cache on the small mutable files (index + demographics) so
+        # updates show up quickly; long cache on the heavy, stable blobs
+        short = {"cities.json", "demographics.json", "redlining.json"}
+        cache = "public, max-age=300" if p.name in short else "public, max-age=86400"
         s3.upload_file(str(p), BUCKET, key, ExtraArgs={"ContentType": content_type(p), "CacheControl": cache})
         print(f"  ↑ {key}")
     print(f"uploaded {len(files)} file(s) to r2://{BUCKET}")
