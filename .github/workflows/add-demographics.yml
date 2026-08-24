@@ -1,0 +1,50 @@
+name: Add demographics
+
+# Extract census-tract demographics (ACS) + HOLC redlining for one or more
+# cities and upload to R2. Actions -> "Add demographics" -> Run workflow.
+# Paste slugs (space/comma/newline separated), e.g. "atlanta-ga chicago-il".
+on:
+  workflow_dispatch:
+    inputs:
+      slugs:
+        description: "City slugs (space/comma/newline separated)"
+        required: true
+        type: string
+
+concurrency:
+  group: demographics
+  cancel-in-progress: false
+
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Extract demographics
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+          SLUGS: ${{ inputs.slugs }}
+        run: |
+          for slug in $(printf '%s' "$SLUGS" | tr ',\n' '  '); do
+            [ -z "$slug" ] && continue
+            echo "::group::$slug"
+            python scripts/extract_demographics.py "$slug" </dev/null || echo "  failed: $slug"
+            echo "::endgroup::"
+          done
+
+      - name: Upload to R2
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          for slug in $(printf '%s' "${{ inputs.slugs }}" | tr ',\n' '  '); do
+            [ -z "$slug" ] && continue
+            python scripts/upload_r2.py "$slug"
+          done
