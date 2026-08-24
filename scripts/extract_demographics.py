@@ -197,10 +197,13 @@ def main():
     for t in tracts:
         g = t["properties"]["GEOID"]
         a = acs.get(g, {})
-        # density = population / land area (AREALAND, m² from TIGER) in sq miles
-        aland = t["properties"].get("AREALAND") or 0
+        # density = population / land area (AREALAND, m² from TIGER; may be a str) in sq miles
+        try:
+            aland = float(t["properties"].get("AREALAND") or 0)
+        except (TypeError, ValueError):
+            aland = 0
         pop = a.get("pop")
-        density = round(pop / (aland / SQM_PER_SQMI)) if pop is not None and aland else None
+        density = round(pop / (aland / SQM_PER_SQMI)) if pop is not None and aland > 0 else None
         feats.append({
             "type": "Feature",
             "geometry": round_coords(t["geometry"]),
