@@ -20,6 +20,7 @@ import os
 import sys
 import urllib.parse
 import urllib.request
+from datetime import date
 from pathlib import Path
 
 from cities import get_city
@@ -37,11 +38,20 @@ HOLC = "https://dsl.richmond.edu/panorama/redlining/static/mappinginequality.jso
 # ACS variables -> we derive income, % non-white, poverty rate per tract
 ACS_VARS = [
     "B19013_001E",  # median household income
-    "B03002_001E",  # race: total
-    "B03002_003E",  # white alone, not hispanic
     "B17001_001E",  # poverty: pop for whom status determined
     "B17001_002E",  # poverty: below poverty level
+    "B25077_001E",  # median home value
+    "B01003_001E",  # total population (density = pop / tract land area)
 ]
+VINTAGE = "US Census ACS 5-year 2020–2024"
+# per-variable "learn more" links (data.census.gov table shells)
+SOURCES = {
+    "income": "https://data.census.gov/table/ACSDT5Y2024.B19013",
+    "povertyRate": "https://data.census.gov/table/ACSDT5Y2024.B17001",
+    "homeValue": "https://data.census.gov/table/ACSDT5Y2024.B25077",
+    "density": "https://data.census.gov/table/ACSDT5Y2024.B01003",
+}
+SQM_PER_SQMI = 2589988.11
 
 
 def _get(url: str) -> bytes:
@@ -85,7 +95,7 @@ def fetch_tracts(bbox):
         "geometryType": "esriGeometryEnvelope",
         "inSR": "4326",
         "spatialRel": "esriSpatialRelIntersects",
-        "outFields": "GEOID",
+        "outFields": "GEOID,AREALAND",
         "returnGeometry": "true",
         "outSR": "4326",
         "f": "geojson",
@@ -130,14 +140,15 @@ def fetch_acs(geoids):
                 except (TypeError, ValueError):
                     return None
             income = num(row[idx["B19013_001E"]])
-            tot = num(row[idx["B03002_001E"]])
-            white = num(row[idx["B03002_003E"]])
             pov_tot = num(row[idx["B17001_001E"]])
             pov_below = num(row[idx["B17001_002E"]])
+            home = num(row[idx["B25077_001E"]])
+            pop = num(row[idx["B01003_001E"]])
             out[geoid] = {
                 "income": int(income) if income is not None else None,
-                "pctNonwhite": round(1 - white / tot, 3) if tot and white is not None and tot > 0 else None,
                 "povertyRate": round(pov_below / pov_tot, 3) if pov_tot and pov_below is not None and pov_tot > 0 else None,
+                "homeValue": int(home) if home is not None else None,
+                "pop": pop,  # kept only to derive density with the tract's land area
             }
     return out
 
@@ -186,14 +197,30 @@ def main():
     for t in tracts:
         g = t["properties"]["GEOID"]
         a = acs.get(g, {})
+        # density = population / land area (AREALAND, m² from TIGER) in sq miles
+        aland = t["properties"].get("AREALAND") or 0
+        pop = a.get("pop")
+        density = round(pop / (aland / SQM_PER_SQMI)) if pop is not None and aland else None
         feats.append({
             "type": "Feature",
             "geometry": round_coords(t["geometry"]),
-            "properties": {"geoid": g, **{k: a.get(k) for k in ("income", "pctNonwhite", "povertyRate")}},
+            "properties": {
+                "geoid": g,
+                "income": a.get("income"),
+                "povertyRate": a.get("povertyRate"),
+                "homeValue": a.get("homeValue"),
+                "density": density,
+            },
         })
     (outdir / "demographics.json").write_text(json.dumps({
         "type": "FeatureCollection",
-        "meta": {"source": "US Census ACS 5-year 2020–2024 + TIGERweb 2020 tracts", "acs": bool(acs)},
+        "meta": {
+            "vintage": VINTAGE,
+            "retrieved": date.today().isoformat(),
+            "tracts": "US Census TIGERweb (2020 tracts)",
+            "sources": SOURCES,
+            "acs": bool(acs),
+        },
         "features": feats,
     }))
     print(f"  wrote demographics.json ({len(feats)} tracts, acs={bool(acs)})")
