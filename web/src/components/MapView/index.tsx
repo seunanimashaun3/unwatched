@@ -4,7 +4,8 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { Camera, LngLat, RouteResponse } from "@/lib/types";
 import { buildMapStyle, cartoTiles } from "@/lib/mapStyle";
 import type { Theme } from "@/components/ThemeProvider";
-import { emptyFC, initMapLayers, lineFC, pointsFC, setCamVisibility } from "@/lib/mapLayers";
+import { emptyFC, initMapLayers, lineFC, pointsFC, setCamVisibility, setDemographics } from "@/lib/mapLayers";
+import type { OverlayVar } from "@/lib/demographics";
 import { syncLiveMarker, syncMarker } from "@/lib/markers";
 import { reverseGeocode } from "@/lib/geocode";
 import type { Mode } from "@/components/Panel";
@@ -35,6 +36,9 @@ export default function MapView({
   result,
   highlightCameras,
   alprOnly,
+  overlay,
+  demoTracts,
+  demoRedlining,
   onPick,
   onMoveStart,
   onMoveEnd,
@@ -54,6 +58,10 @@ export default function MapView({
   /** camera indices to highlight big & bright (the selected route's cameras). */
   highlightCameras: number[];
   alprOnly: boolean;
+  /** demographic context overlay (null = off). */
+  overlay: OverlayVar | null;
+  demoTracts: GeoJSON.FeatureCollection | null;
+  demoRedlining: GeoJSON.FeatureCollection | null;
   onPick: (p: LngLat) => void;
   onMoveStart: (p: LngLat) => void;
   onMoveEnd: (p: LngLat) => void;
@@ -190,6 +198,13 @@ export default function MapView({
   useEffect(() => {
     if (map.current && loaded.current) setCamVisibility(map.current, alprOnly);
   }, [alprOnly]);
+
+  // ---- demographic context overlay ----
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !loaded.current) return;
+    setDemographics(m, overlay, demoTracts, demoRedlining);
+  }, [overlay, demoTracts, demoRedlining]);
 
   // ---- swap basemap tiles when the theme changes ----
   useEffect(() => {

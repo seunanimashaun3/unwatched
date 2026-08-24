@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Camera, CityIndexEntry, LngLat, Meta, PendingPoint } from "@/lib/types";
 import { computeExposure, type Exposure } from "@/lib/exposure";
 import { fetchCityCameras, fetchCityMeta } from "@/lib/cities";
+import { availableOverlays, fetchDemographics, fetchRedlining, type OverlayVar } from "@/lib/demographics";
+import DemographicsControl from "@/components/DemographicsControl";
 import { fmtPoint } from "@/lib/presets";
 import { cityForPoint, fmtCamera, inBbox, nearestCamera } from "@/lib/proximity";
 import { primeAudio, releaseWakeLock, requestWakeLock } from "@/lib/alerts";
@@ -40,6 +42,11 @@ export default function City({
   const [cameras, setCameras] = useState<Camera[]>([]);
   const [notFound, setNotFound] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+
+  // demographic context overlay (only for cities that have the data)
+  const [overlay, setOverlay] = useState<OverlayVar | null>(null);
+  const [demoTracts, setDemoTracts] = useState<GeoJSON.FeatureCollection | null>(null);
+  const [demoRedlining, setDemoRedlining] = useState<GeoJSON.FeatureCollection | null>(null);
 
   const [mode, setMode] = useState<Mode>("route");
   const [arm, setArm] = useState<Arm>("a");
@@ -86,6 +93,22 @@ export default function City({
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
+
+  // ---- lazily load demographic context (absent for most cities) ----
+  useEffect(() => {
+    let alive = true;
+    setOverlay(null);
+    setDemoTracts(null);
+    setDemoRedlining(null);
+    Promise.all([fetchDemographics(slug), fetchRedlining(slug)]).then(([d, r]) => {
+      if (!alive) return;
+      setDemoTracts(d);
+      setDemoRedlining(r);
+    });
+    return () => {
+      alive = false;
+    };
   }, [slug]);
 
   const flyTo = (p: LngLat) => setFocus({ point: p, nonce: ++nonce.current });
@@ -272,6 +295,10 @@ export default function City({
   const nextCam = liveFix ? nearestCamera(liveFix, cameras, alprOnly) : null;
   const speedMph = geo.fix?.speedMps != null ? geo.fix.speedMps * 2.23694 : null;
 
+  // which demographic overlays this city actually has data for
+  const demoOptions = availableOverlays(demoTracts);
+  const demoRetrieved = (demoTracts as { meta?: { retrieved?: string } } | null)?.meta?.retrieved ?? null;
+
   // cameras of the selected route, highlighted on the map
   const highlightCameras =
     result?.ok && result.fast && result.private
@@ -297,6 +324,9 @@ export default function City({
         result={result}
         highlightCameras={highlightCameras}
         alprOnly={alprOnly}
+        overlay={overlay}
+        demoTracts={demoTracts}
+        demoRedlining={demoRedlining}
         onPick={onPick}
         onMoveStart={(p) => {
           setStart(p);
@@ -413,7 +443,16 @@ export default function City({
           </Panel>
         ))}
 
-      {!driving && <Legend alprOnly={alprOnly} />}
+      {/* the demographics control owns the bottom-right on cities that have it */}
+      {!driving && demoOptions.length === 0 && <Legend alprOnly={alprOnly} />}
+      {!driving && (
+        <DemographicsControl
+          options={demoOptions}
+          overlay={overlay}
+          onChange={setOverlay}
+          retrieved={demoRetrieved}
+        />
+      )}
     </div>
   );
 }
