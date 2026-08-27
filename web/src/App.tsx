@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { CityIndexEntry, PendingPoint } from "@/lib/types";
 import { fetchCitiesIndex } from "@/lib/cities";
+import { clearLastCity, loadLastCity, saveLastCity, validCity } from "@/lib/lastCity";
 import City from "@/pages/City";
 import Overview from "@/pages/Overview";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -13,23 +14,29 @@ import LoadingScreen from "@/components/LoadingScreen";
  */
 export default function App() {
   const [cities, setCities] = useState<CityIndexEntry[] | null>(null);
-  const [slug, setSlug] = useState<string>("");
+  // restore the last city so a refresh / return trip stays put
+  const [slug, setSlug] = useState<string>(() => loadLastCity());
   const [pending, setPending] = useState<PendingPoint | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     fetchCitiesIndex()
-      .then((d) => setCities(d.cities))
+      .then((d) => {
+        setCities(d.cities);
+        setSlug((s) => validCity(s, d.cities)); // drop a stale/removed persisted city
+      })
       .catch(() => setError(true));
   }, []);
 
   const enterCity = (s: string, p?: PendingPoint) => {
     setPending(p ?? null);
     setSlug(s);
+    saveLastCity(s);
   };
   const exitToOverview = () => {
     setPending(null);
     setSlug("");
+    clearLastCity(); // "back to all cities" resets to the Overview on next visit
   };
 
   if (error) {
