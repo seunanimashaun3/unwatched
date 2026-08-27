@@ -11,12 +11,6 @@ export function buildMapStyle(theme: Theme): string {
     : "https://tiles.openfreemap.org/styles/liberty";
 }
 
-/** Data credits for the attribution control (OSM/OpenFreeMap come from the
- *  style's own sources; this adds our data layers). */
-export const DATA_ATTRIBUTION =
-  'Roads: <a href="https://overturemaps.org" target="_blank" rel="noreferrer">Overture</a> · ' +
-  'Cameras: <a href="https://deflock.me" target="_blank" rel="noreferrer">DeFlock</a>';
-
 // route + marker colors — theme-independent, tuned to pop on the colorful map.
 // red = surveillance, emerald = least-watched route, indigo = fastest route.
 export const COLORS = {

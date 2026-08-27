@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { Camera, LngLat, RouteResponse } from "@/lib/types";
-import { buildMapStyle, DATA_ATTRIBUTION } from "@/lib/mapStyle";
+import { buildMapStyle } from "@/lib/mapStyle";
 import type { Theme } from "@/components/ThemeProvider";
 import { emptyFC, initMapLayers, lineFC, pointsFC, setCamVisibility, setDemographics } from "@/lib/mapLayers";
 import type { OverlayVar } from "@/lib/demographics";
@@ -120,10 +120,6 @@ export default function MapView({
       attributionControl: false,
     });
     map.current = m;
-    m.addControl(
-      new maplibregl.AttributionControl({ compact: true, customAttribution: DATA_ATTRIBUTION }),
-      "bottom-left",
-    );
     m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     m.getCanvas().style.cursor = "crosshair";
 

@@ -4,6 +4,7 @@ import { computeExposure, type Exposure } from "@/lib/exposure";
 import { fetchCityCameras, fetchCityMeta } from "@/lib/cities";
 import { availableOverlays, fetchDemographics, fetchRedlining, type OverlayVar } from "@/lib/demographics";
 import DemographicsControl from "@/components/DemographicsControl";
+import MapCredit from "@/components/MapCredit";
 import { fmtPoint } from "@/lib/presets";
 import { cityForPoint, fmtCamera, inBbox, nearestCamera } from "@/lib/proximity";
 import { primeAudio, releaseWakeLock, requestWakeLock } from "@/lib/alerts";
@@ -443,6 +444,7 @@ export default function City({
           </Panel>
         ))}
 
+      {!driving && <MapCredit />}
       {/* the demographics control owns the bottom-right on cities that have it */}
       {!driving && demoOptions.length === 0 && <Legend alprOnly={alprOnly} />}
       {!driving && (
