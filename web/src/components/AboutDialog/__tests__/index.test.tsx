@@ -15,10 +15,10 @@ describe("AboutDialog", () => {
     await userEvent.click(screen.getByRole("button", { name: /privacy & terms/i }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText(/entirely in your browser/i)).toBeInTheDocument();
-    expect(screen.getByText(/no tracking, analytics, ads, or cookies/i)).toBeInTheDocument();
+    expect(screen.getByText(/no tracking/i)).toBeInTheDocument();
     expect(screen.getByText(/do not use it to facilitate/i)).toBeInTheDocument();
     expect(screen.getByText(/accept no liability/i)).toBeInTheDocument();
-    expect(screen.getByText(/known to be incomplete/i)).toBeInTheDocument();
+    expect(screen.getByText(/crowdsourced and incomplete/i)).toBeInTheDocument();
   });
 
   it("closes on the X button", async () => {
