@@ -15,7 +15,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 const feature = (lon: number, lat: number, props: Record<string, string>) => ({
   geometry: { type: "Point", coordinates: [lon, lat] },
-  properties: props,
+  properties: { countrycode: "US", ...props }, // US by default; override to test filtering
 });
 
 describe("geocode", () => {
@@ -44,14 +44,14 @@ describe("geocode", () => {
     expect(r[0].label).toMatch(/1 Dolores St/);
   });
 
-  it("searches globally — results far from the bias point are kept", async () => {
+  it("keeps US results anywhere in the country but drops foreign ones", async () => {
     mockPhoton([
-      feature(-122.42, 37.77, { name: "In town" }),
-      feature(-73.99, 40.73, { name: "New York place" }),
+      feature(-122.42, 37.77, { name: "In town" }), // US (default)
+      feature(-73.99, 40.73, { name: "New York place" }), // US, far from bias — kept
+      feature(-79.38, 43.65, { name: "Toronto place", countrycode: "CA" }), // Canada — dropped
     ]);
     const r = await geocode("place", NEAR);
-    expect(r).toHaveLength(2);
-    expect(r.map((x) => x.label)).toContain("New York place");
+    expect(r.map((x) => x.label)).toEqual(["In town", "New York place"]);
   });
 
   it("returns [] on network error rather than throwing", async () => {

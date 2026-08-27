@@ -220,8 +220,9 @@ export default function Overview({
         </div>
       </div>
 
-      {/* bottom: a "not covered near you" prompt after locate, else the hint */}
-      <div className="absolute bottom-4 left-1/2 z-10 flex w-[min(28rem,calc(100%-1.5rem))] -translate-x-1/2 flex-col items-center gap-1.5">
+      {/* bottom: a "not covered near you" prompt after locate, else the hint.
+          Lifted above the map attribution on mobile to avoid overlap. */}
+      <div className="absolute bottom-9 left-1/2 z-10 flex max-w-[calc(100%-5.5rem)] -translate-x-1/2 flex-col items-center gap-1.5 sm:bottom-4 sm:max-w-[calc(100%-1.5rem)]">
         {geoMsg ? (
           <div className="rounded-lg border border-border bg-card/95 px-4 py-2.5 text-center text-[12.5px] shadow-xl backdrop-blur-md">
             <b className="text-alert">{geoMsg}</b>
@@ -236,11 +237,14 @@ export default function Overview({
             )}
           </div>
         ) : (
-          <div className="pointer-events-none rounded-full border border-border bg-card/90 px-4 py-2 text-center text-[12.5px] shadow-lg backdrop-blur-md">
+          <div className="pointer-events-none whitespace-nowrap rounded-full border border-border bg-card/90 px-4 py-2 text-center text-[12.5px] shadow-lg backdrop-blur-md">
             Tap a city to plan a route
-            <span className="mx-1.5 text-faint">·</span>
-            <span className="text-muted-foreground">
-              {cities.length} cities, {cities.reduce((n, c) => n + c.counts.alpr, 0).toLocaleString()} cameras mapped
+            {/* the counts are nice on desktop but crowd the mobile bottom bar */}
+            <span className="hidden sm:inline">
+              <span className="mx-1.5 text-faint">·</span>
+              <span className="text-muted-foreground">
+                {cities.length} cities, {cities.reduce((n, c) => n + c.counts.alpr, 0).toLocaleString()} cameras mapped
+              </span>
             </span>
           </div>
         )}

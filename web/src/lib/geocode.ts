@@ -30,6 +30,8 @@ export async function geocode(
     if (!r.ok) return [];
     const data = await r.json();
     return (data.features || [])
+      // US-only: this is a US surveillance tool, so drop foreign results
+      .filter((f: { properties?: { countrycode?: string } }) => f?.properties?.countrycode === "US")
       .map(toResult)
       .filter((res: GeoResult | null): res is GeoResult => res !== null);
   } catch {

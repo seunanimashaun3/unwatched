@@ -162,6 +162,14 @@
   }
 }
 
+/* Keep the map attribution collapsed to its ⓘ on phones so it can't sprawl
+   across the bottom bar and collide with the hint / privacy link. */
+@media (max-width: 640px) {
+  .maplibregl-ctrl-attrib.maplibregl-compact:not(.maplibregl-compact-show) .maplibregl-ctrl-attrib-inner {
+    display: none;
+  }
+}
+
 /* City view eases in so the overview→city map hand-off crossfades. */
 @keyframes cityIn {
   from {
