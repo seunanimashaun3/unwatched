@@ -149,16 +149,10 @@ export default function Overview({
       {/* subtle top scrim so the top chrome stays legible over the map */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-24 bg-gradient-to-b from-background/70 to-transparent" />
 
-      {/* brand + privacy link — top left (kept clear of the map attribution) */}
-      <div className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-card/90 px-3.5 py-2 shadow-lg backdrop-blur-md">
-          <span className="live-dot" />
-          <h1 className="font-display text-[17px] font-bold leading-none tracking-tight">Unwatched</h1>
-        </div>
-        <AboutDialog
-          label="Private by design · Privacy & terms"
-          className="rounded-md border border-border bg-card/85 px-2 py-1 text-[10.5px] text-faint shadow backdrop-blur-md hover:text-muted-foreground"
-        />
+      {/* brand — top left */}
+      <div className="absolute left-3 top-3 z-10 flex items-center gap-2 rounded-lg border border-border bg-card/90 px-3.5 py-2 shadow-lg backdrop-blur-md">
+        <span className="live-dot" />
+        <h1 className="font-display text-[17px] font-bold leading-none tracking-tight">Unwatched</h1>
       </div>
 
       {/* theme — top right */}
@@ -252,6 +246,10 @@ export default function Overview({
             </span>
           </div>
         )}
+        <AboutDialog
+          label="Private by design · Privacy & terms"
+          className="rounded-md border border-border bg-card/85 px-2 py-1 text-[10.5px] text-faint shadow backdrop-blur-md hover:text-muted-foreground"
+        />
       </div>
     </div>
   );
