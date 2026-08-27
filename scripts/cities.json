@@ -729,5 +729,29 @@
       "flock": 63,
       "watchedEdges": 383
     }
+  },
+  "memphis-tn": {
+    "name": "Memphis",
+    "state": "TN",
+    "bbox": [
+      -90.15,
+      34.98,
+      -89.78,
+      35.24
+    ],
+    "center": [
+      -89.965,
+      35.11
+    ],
+    "zoom": 9.5,
+    "presets": [],
+    "counts": {
+      "nodes": 187171,
+      "edges": 224789,
+      "cameras": 572,
+      "alpr": 570,
+      "flock": 554,
+      "watchedEdges": 1849
+    }
   }
 }
