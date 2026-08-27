@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { Camera, LngLat, RouteResponse } from "@/lib/types";
-import { buildMapStyle, cartoTiles } from "@/lib/mapStyle";
+import { buildMapStyle, DATA_ATTRIBUTION } from "@/lib/mapStyle";
 import type { Theme } from "@/components/ThemeProvider";
 import { emptyFC, initMapLayers, lineFC, pointsFC, setCamVisibility, setDemographics } from "@/lib/mapLayers";
 import type { OverlayVar } from "@/lib/demographics";
@@ -82,6 +82,33 @@ export default function MapView({
   const popup = useRef<maplibregl.Popup | null>(null);
   const popupSeq = useRef(0);
 
+  // refs so we can re-apply all custom layers/data after a base-style swap
+  // (a vector setStyle wipes them), plus on first load
+  const resultRef = useRef(result);
+  resultRef.current = result;
+  const highlightRef = useRef(highlightCameras);
+  highlightRef.current = highlightCameras;
+  const alprRef = useRef(alprOnly);
+  alprRef.current = alprOnly;
+  const overlayRef = useRef(overlay);
+  overlayRef.current = overlay;
+  const demoTractsRef = useRef(demoTracts);
+  demoTractsRef.current = demoTracts;
+  const demoRedliningRef = useRef(demoRedlining);
+  demoRedliningRef.current = demoRedlining;
+
+  const applyLayers = useCallback((m: maplibregl.Map) => {
+    initMapLayers(m, camsRef.current);
+    const res = resultRef.current;
+    const fast = res?.ok ? res.fast : undefined;
+    const priv = res?.ok ? res.private : undefined;
+    (m.getSource("route-fast") as maplibregl.GeoJSONSource | undefined)?.setData(fast ? lineFC(fast.path) : emptyFC());
+    (m.getSource("route-private") as maplibregl.GeoJSONSource | undefined)?.setData(priv ? lineFC(priv.path) : emptyFC());
+    (m.getSource("passed") as maplibregl.GeoJSONSource | undefined)?.setData(pointsFC(highlightRef.current, camsRef.current));
+    setCamVisibility(m, alprRef.current);
+    setDemographics(m, overlayRef.current, demoTractsRef.current, demoRedliningRef.current);
+  }, []);
+
   // ---- init once ----
   useEffect(() => {
     if (!el.current || map.current) return;
@@ -93,14 +120,16 @@ export default function MapView({
       attributionControl: false,
     });
     map.current = m;
-    m.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
+    m.addControl(
+      new maplibregl.AttributionControl({ compact: true, customAttribution: DATA_ATTRIBUTION }),
+      "bottom-left",
+    );
     m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     m.getCanvas().style.cursor = "crosshair";
 
     m.on("load", () => {
-      initMapLayers(m, cameras);
       loaded.current = true;
-      setCamVisibility(m, alprOnly);
+      applyLayers(m);
     });
 
     // a camera under the tap opens its details popup; otherwise set an endpoint
@@ -206,11 +235,13 @@ export default function MapView({
     setDemographics(m, overlay, demoTracts, demoRedlining);
   }, [overlay, demoTracts, demoRedlining]);
 
-  // ---- swap basemap tiles when the theme changes ----
+  // ---- swap the whole base style on theme change, then re-add our layers ----
   useEffect(() => {
-    const src = map.current?.getSource("carto") as maplibregl.RasterTileSource | undefined;
-    src?.setTiles(cartoTiles(theme));
-  }, [theme]);
+    const m = map.current;
+    if (!m || !loaded.current) return;
+    m.setStyle(buildMapStyle(theme));
+    m.once("styledata", () => applyLayers(m));
+  }, [theme, applyLayers]);
 
   // clear exposure marker when leaving exposure mode
   useEffect(() => {

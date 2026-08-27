@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import { Loader2, LocateFixed, MapPin, Search } from "lucide-react";
 import type { CityIndexEntry, PendingPoint } from "@/lib/types";
-import { buildMapStyle } from "@/lib/mapStyle";
+import { buildMapStyle, DATA_ATTRIBUTION } from "@/lib/mapStyle";
 import { geocode, type GeoResult } from "@/lib/geocode";
 import { cityForPoint } from "@/lib/proximity";
 import { REQUEST_CITY_URL } from "@/lib/cities";
@@ -74,7 +74,10 @@ export default function Overview({
       dragRotate: false,
     });
     mapObj.current = map;
-    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
+    map.addControl(
+      new maplibregl.AttributionControl({ compact: true, customAttribution: DATA_ATTRIBUTION }),
+      "bottom-left",
+    );
 
     map.on("load", () => {
       const bounds = new maplibregl.LngLatBounds();
