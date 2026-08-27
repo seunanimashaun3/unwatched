@@ -9,6 +9,7 @@ import { REQUEST_CITY_URL } from "@/lib/cities";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useTheme } from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
+import AboutDialog from "@/components/AboutDialog";
 
 /**
  * Landing map: no forced city. The whole country of supported cities is shown
@@ -220,7 +221,7 @@ export default function Overview({
       </div>
 
       {/* bottom: a "not covered near you" prompt after locate, else the hint */}
-      <div className="absolute bottom-5 left-1/2 z-10 w-[min(28rem,calc(100%-1.5rem))] -translate-x-1/2">
+      <div className="absolute bottom-4 left-1/2 z-10 flex w-[min(28rem,calc(100%-1.5rem))] -translate-x-1/2 flex-col items-center gap-1.5">
         {geoMsg ? (
           <div className="rounded-lg border border-border bg-card/95 px-4 py-2.5 text-center text-[12.5px] shadow-xl backdrop-blur-md">
             <b className="text-alert">{geoMsg}</b>
@@ -243,6 +244,10 @@ export default function Overview({
             </span>
           </div>
         )}
+        <AboutDialog
+          label="Private by design · Privacy & terms"
+          className="text-[11px] text-faint underline underline-offset-2 hover:text-muted-foreground"
+        />
       </div>
     </div>
   );

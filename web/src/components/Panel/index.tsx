@@ -4,6 +4,7 @@ import type { Meta } from "@/lib/types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MetaNote from "@/components/MetaNote";
 import ThemeToggle from "@/components/ThemeToggle";
+import AboutDialog from "@/components/AboutDialog";
 
 export type Mode = "route" | "exposure";
 
@@ -73,6 +74,13 @@ export default function Panel({
         {children}
 
         <MetaNote meta={meta} />
+
+        <div className="mt-3 border-t border-border pt-3">
+          <AboutDialog
+            label="Private by design · Privacy & terms"
+            className="text-[11px] text-faint underline underline-offset-2 hover:text-muted-foreground"
+          />
+        </div>
       </div>
     </div>
   );
