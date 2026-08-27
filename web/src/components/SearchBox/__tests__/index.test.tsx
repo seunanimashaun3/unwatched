@@ -52,7 +52,7 @@ describe("SearchBox", () => {
     mockPhoton([
       {
         geometry: { type: "Point", coordinates: [-122.42, 37.77] },
-        properties: { name: "Ferry Building", city: "San Francisco" },
+        properties: { name: "Ferry Building", city: "San Francisco", countrycode: "US" },
       },
     ]);
     const p = baseProps();
