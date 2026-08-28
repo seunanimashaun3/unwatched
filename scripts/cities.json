@@ -49,9 +49,9 @@
       }
     ],
     "counts": {
-      "alpr": 526,
-      "cameras": 1907,
-      "flock": 483
+      "alpr": 533,
+      "cameras": 1914,
+      "flock": 490
     }
   },
   "new-york-ny": {
@@ -70,12 +70,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 285394,
-      "edges": 347814,
-      "cameras": 1969,
-      "alpr": 1355,
-      "flock": 172,
-      "watchedEdges": 6927
+      "alpr": 1368,
+      "cameras": 1982,
+      "flock": 179
     }
   },
   "chicago-il": {
@@ -94,12 +91,9 @@
     "zoom": 9.7,
     "presets": [],
     "counts": {
-      "nodes": 291180,
-      "edges": 364908,
-      "cameras": 1726,
-      "alpr": 1003,
-      "flock": 375,
-      "watchedEdges": 9138
+      "alpr": 1023,
+      "cameras": 1746,
+      "flock": 385
     }
   },
   "san-jose-ca": {
@@ -118,9 +112,9 @@
     "zoom": 11.4,
     "presets": [],
     "counts": {
-      "alpr": 700,
-      "cameras": 827,
-      "flock": 653
+      "alpr": 712,
+      "cameras": 840,
+      "flock": 661
     }
   },
   "norfolk-va": {
@@ -139,9 +133,9 @@
     "zoom": 12.0,
     "presets": [],
     "counts": {
-      "alpr": 303,
-      "cameras": 304,
-      "flock": 280
+      "alpr": 310,
+      "cameras": 311,
+      "flock": 287
     }
   },
   "virginia-beach-va": {
@@ -160,9 +154,9 @@
     "zoom": 11.3,
     "presets": [],
     "counts": {
-      "alpr": 94,
-      "cameras": 94,
-      "flock": 88
+      "alpr": 98,
+      "cameras": 98,
+      "flock": 92
     }
   },
   "nashville-tn": {
@@ -225,12 +219,9 @@
     "zoom": 9.7,
     "presets": [],
     "counts": {
-      "nodes": 199342,
-      "edges": 261552,
-      "cameras": 446,
-      "alpr": 425,
-      "flock": 302,
-      "watchedEdges": 1645
+      "alpr": 435,
+      "cameras": 456,
+      "flock": 310
     }
   },
   "denver-co": {
@@ -249,9 +240,9 @@
     "zoom": 9.8,
     "presets": [],
     "counts": {
-      "alpr": 446,
-      "cameras": 1692,
-      "flock": 383
+      "alpr": 455,
+      "cameras": 1701,
+      "flock": 392
     }
   },
   "atlanta-ga": {
@@ -270,12 +261,9 @@
     "zoom": 9.8,
     "presets": [],
     "counts": {
-      "nodes": 148946,
-      "edges": 184049,
-      "cameras": 1378,
-      "alpr": 1361,
-      "flock": 1251,
-      "watchedEdges": 5378
+      "alpr": 1406,
+      "cameras": 1423,
+      "flock": 1293
     }
   },
   "houston-tx": {
@@ -294,12 +282,9 @@
     "zoom": 9.6,
     "presets": [],
     "counts": {
-      "nodes": 224213,
-      "edges": 296631,
-      "cameras": 1726,
-      "alpr": 1685,
-      "flock": 1514,
-      "watchedEdges": 6593
+      "alpr": 1695,
+      "cameras": 1736,
+      "flock": 1523
     }
   },
   "phoenix-az": {
@@ -318,12 +303,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 315753,
-      "edges": 405965,
-      "cameras": 468,
-      "alpr": 425,
-      "flock": 366,
-      "watchedEdges": 1866
+      "alpr": 432,
+      "cameras": 475,
+      "flock": 370
     }
   },
   "philadelphia-pa": {
@@ -342,12 +324,9 @@
     "zoom": 10.1,
     "presets": [],
     "counts": {
-      "nodes": 147600,
-      "edges": 188736,
-      "cameras": 330,
-      "alpr": 129,
-      "flock": 63,
-      "watchedEdges": 986
+      "alpr": 146,
+      "cameras": 356,
+      "flock": 65
     }
   },
   "dallas-tx": {
@@ -366,12 +345,9 @@
     "zoom": 9.9,
     "presets": [],
     "counts": {
-      "nodes": 164873,
-      "edges": 221954,
-      "cameras": 808,
-      "alpr": 775,
-      "flock": 763,
-      "watchedEdges": 4143
+      "alpr": 782,
+      "cameras": 815,
+      "flock": 770
     }
   },
   "san-antonio-tx": {
@@ -390,12 +366,9 @@
     "zoom": 9.9,
     "presets": [],
     "counts": {
-      "nodes": 145741,
-      "edges": 195394,
-      "cameras": 346,
-      "alpr": 233,
-      "flock": 226,
-      "watchedEdges": 1182
+      "alpr": 240,
+      "cameras": 353,
+      "flock": 232
     }
   },
   "san-diego-ca": {
@@ -414,12 +387,9 @@
     "zoom": 9.9,
     "presets": [],
     "counts": {
-      "nodes": 146279,
-      "edges": 176077,
-      "cameras": 692,
-      "alpr": 521,
-      "flock": 131,
-      "watchedEdges": 3728
+      "alpr": 539,
+      "cameras": 710,
+      "flock": 148
     }
   },
   "washington-dc": {
@@ -438,12 +408,9 @@
     "zoom": 10.1,
     "presets": [],
     "counts": {
-      "nodes": 164750,
-      "edges": 201961,
-      "cameras": 925,
-      "alpr": 297,
-      "flock": 273,
-      "watchedEdges": 2432
+      "alpr": 303,
+      "cameras": 932,
+      "flock": 277
     }
   },
   "boston-ma": {
@@ -462,12 +429,9 @@
     "zoom": 10.2,
     "presets": [],
     "counts": {
-      "nodes": 86211,
-      "edges": 103673,
-      "cameras": 3645,
-      "alpr": 118,
-      "flock": 67,
-      "watchedEdges": 7138
+      "alpr": 115,
+      "cameras": 3643,
+      "flock": 64
     }
   },
   "seattle-wa": {
@@ -486,12 +450,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 370065,
-      "edges": 437532,
-      "cameras": 2386,
-      "alpr": 600,
-      "flock": 414,
-      "watchedEdges": 9271
+      "alpr": 602,
+      "cameras": 2379,
+      "flock": 416
     }
   },
   "miami-fl": {
@@ -510,12 +471,9 @@
     "zoom": 10.1,
     "presets": [],
     "counts": {
-      "nodes": 143516,
-      "edges": 184935,
-      "cameras": 308,
-      "alpr": 294,
-      "flock": 216,
-      "watchedEdges": 1371
+      "alpr": 304,
+      "cameras": 318,
+      "flock": 224
     }
   },
   "portland-or": {
@@ -534,12 +492,9 @@
     "zoom": 10.1,
     "presets": [],
     "counts": {
-      "nodes": 92476,
-      "edges": 114541,
-      "cameras": 200,
-      "alpr": 71,
-      "flock": 35,
-      "watchedEdges": 799
+      "alpr": 76,
+      "cameras": 208,
+      "flock": 37
     }
   },
   "detroit-mi": {
@@ -558,12 +513,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 171953,
-      "edges": 222856,
-      "cameras": 851,
-      "alpr": 742,
-      "flock": 472,
-      "watchedEdges": 3334
+      "alpr": 748,
+      "cameras": 857,
+      "flock": 477
     }
   },
   "minneapolis-mn": {
@@ -582,12 +534,9 @@
     "zoom": 10.3,
     "presets": [],
     "counts": {
-      "nodes": 109134,
-      "edges": 135707,
-      "cameras": 653,
-      "alpr": 219,
-      "flock": 150,
-      "watchedEdges": 2628
+      "alpr": 223,
+      "cameras": 660,
+      "flock": 152
     }
   },
   "los-angeles-ca": {
@@ -606,12 +555,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 559669,
-      "edges": 700807,
-      "cameras": 2351,
-      "alpr": 2167,
-      "flock": 1445,
-      "watchedEdges": 8901
+      "alpr": 2192,
+      "cameras": 2376,
+      "flock": 1449
     }
   },
   "austin-tx": {
@@ -630,12 +576,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 222411,
-      "edges": 278154,
-      "cameras": 626,
-      "alpr": 531,
-      "flock": 479,
-      "watchedEdges": 2264
+      "alpr": 517,
+      "cameras": 612,
+      "flock": 468
     }
   },
   "salt-lake-city-ut": {
@@ -654,12 +597,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 211859,
-      "edges": 259141,
-      "cameras": 733,
-      "alpr": 423,
-      "flock": 270,
-      "watchedEdges": 2754
+      "alpr": 436,
+      "cameras": 746,
+      "flock": 284
     }
   },
   "murfreesboro-tn": {
@@ -701,9 +641,9 @@
       }
     ],
     "counts": {
-      "alpr": 193,
-      "cameras": 196,
-      "flock": 177
+      "alpr": 194,
+      "cameras": 197,
+      "flock": 178
     }
   },
   "chattanooga-tn": {
@@ -722,12 +662,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 74965,
-      "edges": 92962,
-      "cameras": 131,
       "alpr": 98,
-      "flock": 63,
-      "watchedEdges": 383
+      "cameras": 132,
+      "flock": 63
     }
   },
   "memphis-tn": {
@@ -746,12 +683,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "nodes": 187171,
-      "edges": 224789,
-      "cameras": 572,
-      "alpr": 570,
-      "flock": 554,
-      "watchedEdges": 1849
+      "alpr": 571,
+      "cameras": 573,
+      "flock": 555
     }
   }
 }
