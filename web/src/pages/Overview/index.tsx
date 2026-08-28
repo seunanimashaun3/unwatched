@@ -11,6 +11,7 @@ import { useTheme } from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import AboutDialog from "@/components/AboutDialog";
 import MapCredit from "@/components/MapCredit";
+import { fmtRefreshed } from "@/components/MetaNote";
 
 /**
  * Landing map: no forced city. The whole country of supported cities is shown
@@ -19,9 +20,11 @@ import MapCredit from "@/components/MapCredit";
  */
 export default function Overview({
   cities,
+  refreshed,
   onEnter,
 }: {
   cities: CityIndexEntry[];
+  refreshed?: string;
   onEnter: (slug: string, pending?: PendingPoint) => void;
 }) {
   const { theme } = useTheme();
@@ -241,7 +244,8 @@ export default function Overview({
             <span className="hidden sm:inline">
               <span className="mx-1.5 text-faint">·</span>
               <span className="text-muted-foreground">
-                {cities.length} cities, {cities.reduce((n, c) => n + c.counts.alpr, 0).toLocaleString()} cameras mapped
+                {cities.length} cities, {cities.reduce((n, c) => n + c.counts.alpr, 0).toLocaleString()} cameras
+                {refreshed && ` · updated ${fmtRefreshed(refreshed)}`}
               </span>
             </span>
           </div>

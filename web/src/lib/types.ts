@@ -66,6 +66,8 @@ export interface CityIndexEntry {
 }
 
 export interface CitiesIndex {
+  /** ISO date the index (all camera data) was last refreshed. */
+  refreshed?: string;
   cities: CityIndexEntry[];
 }
 

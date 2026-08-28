@@ -14,6 +14,7 @@ import LoadingScreen from "@/components/LoadingScreen";
  */
 export default function App() {
   const [cities, setCities] = useState<CityIndexEntry[] | null>(null);
+  const [refreshed, setRefreshed] = useState<string | undefined>();
   // restore the last city so a refresh / return trip stays put
   const [slug, setSlug] = useState<string>(() => loadLastCity());
   const [pending, setPending] = useState<PendingPoint | null>(null);
@@ -23,6 +24,7 @@ export default function App() {
     fetchCitiesIndex()
       .then((d) => {
         setCities(d.cities);
+        setRefreshed(d.refreshed);
         setSlug((s) => validCity(s, d.cities)); // drop a stale/removed persisted city
       })
       .catch(() => setError(true));
@@ -52,7 +54,7 @@ export default function App() {
 
   if (!cities) return <LoadingScreen label="Loading…" />;
 
-  if (!slug) return <Overview cities={cities} onEnter={enterCity} />;
+  if (!slug) return <Overview cities={cities} refreshed={refreshed} onEnter={enterCity} />;
 
   // key on slug so the whole map experience resets cleanly when switching cities
   return (

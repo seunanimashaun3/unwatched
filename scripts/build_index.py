@@ -10,6 +10,7 @@ counts, so the full index rebuilds correctly from it alone.
 Usage:  python scripts/build_index.py
 """
 import json
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -43,7 +44,8 @@ def main() -> None:
     # busiest surveillance first — most compelling at the top of the list
     cities.sort(key=lambda c: c["counts"]["alpr"], reverse=True)
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps({"cities": cities}, indent=2))
+    # top-level date = when the index was last (re)built = last data refresh
+    OUT.write_text(json.dumps({"refreshed": date.today().isoformat(), "cities": cities}, indent=2))
     print(f"wrote index with {len(cities)} cities -> {OUT}")
     for c in cities:
         print(f"  {c['slug']:20} {c['counts']['alpr']:5} ALPR")
