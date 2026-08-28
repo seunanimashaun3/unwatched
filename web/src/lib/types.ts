@@ -43,6 +43,8 @@ export interface Meta {
   presets: Preset[];
   overtureRelease: string;
   cameraSource: string;
+  /** ISO date the camera data was last pulled from DeFlock/OSM. */
+  refreshed?: string;
   counts: {
     nodes: number;
     edges: number;

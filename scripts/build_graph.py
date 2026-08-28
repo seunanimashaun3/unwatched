@@ -15,6 +15,7 @@ import json
 import math
 import sys
 from collections import defaultdict
+from datetime import date
 from pathlib import Path
 
 from cities import get_city
@@ -361,6 +362,7 @@ def main():
         "presets": presets,
         "overtureRelease": "2026-07-22.0",
         "cameraSource": "DeFlock / OpenStreetMap (crowdsourced, incomplete lower bound)",
+        "refreshed": date.today().isoformat(),  # when this camera data was last pulled
         "counts": counts,
     }, indent=2))
 
