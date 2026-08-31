@@ -49,9 +49,9 @@
       }
     ],
     "counts": {
-      "alpr": 533,
-      "cameras": 1914,
-      "flock": 490
+      "alpr": 526,
+      "cameras": 1907,
+      "flock": 494
     }
   },
   "new-york-ny": {
@@ -70,8 +70,8 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 1368,
-      "cameras": 1982,
+      "alpr": 1375,
+      "cameras": 1992,
       "flock": 179
     }
   },
@@ -91,9 +91,9 @@
     "zoom": 9.7,
     "presets": [],
     "counts": {
-      "alpr": 1023,
-      "cameras": 1746,
-      "flock": 385
+      "alpr": 1033,
+      "cameras": 1758,
+      "flock": 390
     }
   },
   "san-jose-ca": {
@@ -112,9 +112,9 @@
     "zoom": 11.4,
     "presets": [],
     "counts": {
-      "alpr": 712,
-      "cameras": 840,
-      "flock": 661
+      "alpr": 714,
+      "cameras": 844,
+      "flock": 663
     }
   },
   "norfolk-va": {
@@ -133,9 +133,9 @@
     "zoom": 12.0,
     "presets": [],
     "counts": {
-      "alpr": 310,
-      "cameras": 311,
-      "flock": 287
+      "alpr": 316,
+      "cameras": 317,
+      "flock": 292
     }
   },
   "virginia-beach-va": {
@@ -154,9 +154,9 @@
     "zoom": 11.3,
     "presets": [],
     "counts": {
-      "alpr": 98,
-      "cameras": 98,
-      "flock": 92
+      "alpr": 107,
+      "cameras": 107,
+      "flock": 96
     }
   },
   "nashville-tn": {
@@ -198,8 +198,8 @@
       }
     ],
     "counts": {
-      "alpr": 278,
-      "cameras": 297,
+      "alpr": 280,
+      "cameras": 299,
       "flock": 257
     }
   },
@@ -219,9 +219,9 @@
     "zoom": 9.7,
     "presets": [],
     "counts": {
-      "alpr": 435,
-      "cameras": 456,
-      "flock": 310
+      "alpr": 439,
+      "cameras": 460,
+      "flock": 313
     }
   },
   "denver-co": {
@@ -240,9 +240,9 @@
     "zoom": 9.8,
     "presets": [],
     "counts": {
-      "alpr": 455,
-      "cameras": 1701,
-      "flock": 392
+      "alpr": 459,
+      "cameras": 1705,
+      "flock": 396
     }
   },
   "atlanta-ga": {
@@ -261,9 +261,9 @@
     "zoom": 9.8,
     "presets": [],
     "counts": {
-      "alpr": 1406,
-      "cameras": 1423,
-      "flock": 1293
+      "alpr": 1435,
+      "cameras": 1452,
+      "flock": 1319
     }
   },
   "houston-tx": {
@@ -282,9 +282,9 @@
     "zoom": 9.6,
     "presets": [],
     "counts": {
-      "alpr": 1695,
-      "cameras": 1736,
-      "flock": 1523
+      "alpr": 1696,
+      "cameras": 1737,
+      "flock": 1524
     }
   },
   "phoenix-az": {
@@ -303,9 +303,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 432,
-      "cameras": 475,
-      "flock": 370
+      "alpr": 439,
+      "cameras": 482,
+      "flock": 375
     }
   },
   "philadelphia-pa": {
@@ -324,8 +324,8 @@
     "zoom": 10.1,
     "presets": [],
     "counts": {
-      "alpr": 146,
-      "cameras": 356,
+      "alpr": 147,
+      "cameras": 366,
       "flock": 65
     }
   },
@@ -345,9 +345,9 @@
     "zoom": 9.9,
     "presets": [],
     "counts": {
-      "alpr": 782,
-      "cameras": 815,
-      "flock": 770
+      "alpr": 789,
+      "cameras": 822,
+      "flock": 776
     }
   },
   "san-antonio-tx": {
@@ -366,8 +366,8 @@
     "zoom": 9.9,
     "presets": [],
     "counts": {
-      "alpr": 240,
-      "cameras": 353,
+      "alpr": 242,
+      "cameras": 355,
       "flock": 232
     }
   },
@@ -387,9 +387,9 @@
     "zoom": 9.9,
     "presets": [],
     "counts": {
-      "alpr": 539,
-      "cameras": 710,
-      "flock": 148
+      "alpr": 548,
+      "cameras": 719,
+      "flock": 157
     }
   },
   "washington-dc": {
@@ -408,9 +408,9 @@
     "zoom": 10.1,
     "presets": [],
     "counts": {
-      "alpr": 303,
-      "cameras": 932,
-      "flock": 277
+      "alpr": 301,
+      "cameras": 930,
+      "flock": 274
     }
   },
   "boston-ma": {
@@ -429,9 +429,9 @@
     "zoom": 10.2,
     "presets": [],
     "counts": {
-      "alpr": 115,
-      "cameras": 3643,
-      "flock": 64
+      "alpr": 116,
+      "cameras": 3644,
+      "flock": 65
     }
   },
   "seattle-wa": {
@@ -450,9 +450,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 602,
-      "cameras": 2379,
-      "flock": 416
+      "alpr": 603,
+      "cameras": 2380,
+      "flock": 417
     }
   },
   "miami-fl": {
@@ -492,9 +492,9 @@
     "zoom": 10.1,
     "presets": [],
     "counts": {
-      "alpr": 76,
-      "cameras": 208,
-      "flock": 37
+      "alpr": 77,
+      "cameras": 211,
+      "flock": 38
     }
   },
   "detroit-mi": {
@@ -513,8 +513,8 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 748,
-      "cameras": 857,
+      "alpr": 752,
+      "cameras": 861,
       "flock": 477
     }
   },
@@ -534,9 +534,9 @@
     "zoom": 10.3,
     "presets": [],
     "counts": {
-      "alpr": 223,
-      "cameras": 660,
-      "flock": 152
+      "alpr": 225,
+      "cameras": 662,
+      "flock": 154
     }
   },
   "los-angeles-ca": {
@@ -555,9 +555,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 2192,
-      "cameras": 2376,
-      "flock": 1449
+      "alpr": 2214,
+      "cameras": 2398,
+      "flock": 1467
     }
   },
   "austin-tx": {
@@ -576,9 +576,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 517,
-      "cameras": 612,
-      "flock": 468
+      "alpr": 523,
+      "cameras": 618,
+      "flock": 474
     }
   },
   "salt-lake-city-ut": {
@@ -597,9 +597,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 436,
-      "cameras": 746,
-      "flock": 284
+      "alpr": 421,
+      "cameras": 731,
+      "flock": 269
     }
   },
   "murfreesboro-tn": {
@@ -683,9 +683,9 @@
     "zoom": 9.5,
     "presets": [],
     "counts": {
-      "alpr": 571,
-      "cameras": 573,
-      "flock": 555
+      "alpr": 583,
+      "cameras": 585,
+      "flock": 565
     }
   }
 }
