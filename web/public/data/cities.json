@@ -1,0 +1,80 @@
+{
+  "refreshed": "2026-09-03",
+  "cities": [
+    {
+      "slug": "atlanta-ga",
+      "city": "Atlanta",
+      "state": "GA",
+      "center": [
+        -84.415,
+        33.76
+      ],
+      "zoom": 9.8,
+      "counts": {
+        "alpr": 1435,
+        "cameras": 1452,
+        "flock": 1319
+      }
+    },
+    {
+      "slug": "san-jose-ca",
+      "city": "San Jose",
+      "state": "CA",
+      "center": [
+        -121.886,
+        37.338
+      ],
+      "zoom": 11.4,
+      "counts": {
+        "alpr": 714,
+        "cameras": 844,
+        "flock": 663
+      }
+    },
+    {
+      "slug": "san-francisco-ca",
+      "city": "San Francisco",
+      "state": "CA",
+      "center": [
+        -122.4194,
+        37.7649
+      ],
+      "zoom": 12.4,
+      "counts": {
+        "alpr": 526,
+        "cameras": 1907,
+        "flock": 494
+      }
+    },
+    {
+      "slug": "norfolk-va",
+      "city": "Norfolk",
+      "state": "VA",
+      "center": [
+        -76.285,
+        36.885
+      ],
+      "zoom": 12.0,
+      "counts": {
+        "alpr": 316,
+        "cameras": 317,
+        "flock": 292
+      }
+    },
+    {
+      "slug": "washington-dc",
+      "city": "Washington",
+      "state": "DC",
+      "center": [
+        -77.02,
+        38.905
+      ],
+      "zoom": 10.1,
+      "counts": {
+        "alpr": 301,
+        "cameras": 930,
+        "flock": 274
+      }
+    }
+  ]
+}

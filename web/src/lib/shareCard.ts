@@ -59,7 +59,7 @@ async function draw(s: ShareStats): Promise<Blob> {
 
   ctx.fillStyle = "#5b53ff";
   ctx.font = "600 28px 'Hanken Grotesk', sans-serif";
-  ctx.fillText("See your number  →  unwatched.net", PAD, H - 72);
+  ctx.fillText("See your number  →  unwatched.onrender.com", PAD, H - 72);
 
   return await new Promise<Blob>((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob failed"))), "image/png"),
@@ -77,7 +77,7 @@ export async function shareExposure(s: ShareStats): Promise<void> {
   };
   if (nav.canShare?.({ files: [file] }) && nav.share) {
     try {
-      await nav.share({ files: [file], title: "Unwatched", text, url: "https://unwatched.net" });
+      await nav.share({ files: [file], title: "Unwatched", text, url: "https://unwatched.onrender.com" });
       return;
     } catch (e) {
       if ((e as Error)?.name === "AbortError") return; // user cancelled — don't download

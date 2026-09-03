@@ -6,4 +6,4 @@ data/raw/
 .DS_Store
 web/dist/
 web/node_modules/
-web/public/data/
+# web/public/data/ is now committed (static JSON served at /data — no R2/backend)

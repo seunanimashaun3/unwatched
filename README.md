@@ -9,7 +9,7 @@ Automatic license-plate readers (ALPRs) from companies like [Flock Safety](https
 
 It also has an **Exposure Score** mode (tap anywhere to see how many cameras watch that spot within a 5-minute walk) and a **Drive mode** — a live "you are here" dot that follows your GPS and **beeps + vibrates when you approach a known plate reader** ("⚠️ Flock camera 150 m ahead"), with a running "logged N×" counter. It's not turn-by-turn navigation — it's a live surveillance heads-up for testing in the car. (Geolocation needs HTTPS, which Render provides.)
 
-🔗 **Live: [unwatched.net](https://unwatched.net)** — pick a city from the dropdown (San Jose has 700 mapped plate readers).
+🔗 **Live: [unwatched.onrender.com](https://unwatched.onrender.com)** — pick a city from the dropdown (San Jose has 700 mapped plate readers).
 
 ## Cities
 

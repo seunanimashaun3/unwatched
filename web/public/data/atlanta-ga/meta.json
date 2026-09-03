@@ -1,0 +1,51 @@
+{
+  "slug": "atlanta-ga",
+  "city": "Atlanta",
+  "state": "GA",
+  "center": [
+    -84.415,
+    33.76
+  ],
+  "zoom": 9.8,
+  "bbox": [
+    -84.55,
+    33.62,
+    -84.28,
+    33.9
+  ],
+  "presets": [
+    {
+      "label": "West \u2194 East",
+      "a": [
+        -84.509755,
+        33.760263
+      ],
+      "b": [
+        -84.320321,
+        33.760179
+      ]
+    },
+    {
+      "label": "South \u2194 North",
+      "a": [
+        -84.414932,
+        33.661947
+      ],
+      "b": [
+        -84.414462,
+        33.858212
+      ]
+    }
+  ],
+  "overtureRelease": "2026-07-22.0",
+  "cameraSource": "DeFlock / OpenStreetMap (crowdsourced, incomplete lower bound)",
+  "refreshed": "2026-08-31",
+  "counts": {
+    "nodes": 148946,
+    "edges": 184049,
+    "cameras": 1452,
+    "alpr": 1435,
+    "flock": 1319,
+    "watchedEdges": 5725
+  }
+}

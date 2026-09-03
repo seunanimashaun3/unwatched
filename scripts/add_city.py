@@ -229,7 +229,7 @@ def main():
     except BaseException as e:
         shutil.rmtree(ROOT / "data" / "raw" / slug, ignore_errors=True)
         if prev is not None:
-            # existing city — restore its prior entry; its data on R2 is untouched
+            # existing city — restore its prior entry; its built data is untouched
             print(f"\nFailed ({e}); restoring previous {slug} (unchanged).", file=sys.stderr)
             cities.save_city(slug, prev)
         else:

@@ -1,0 +1,62 @@
+{
+  "slug": "san-francisco-ca",
+  "city": "San Francisco",
+  "state": "CA",
+  "center": [
+    -122.4194,
+    37.7649
+  ],
+  "zoom": 12.4,
+  "bbox": [
+    -122.52,
+    37.7,
+    -122.35,
+    37.83
+  ],
+  "presets": [
+    {
+      "label": "Mission \u2192 Marina",
+      "a": [
+        -122.4194,
+        37.7599
+      ],
+      "b": [
+        -122.4368,
+        37.803
+      ]
+    },
+    {
+      "label": "Downtown \u2192 Sunset",
+      "a": [
+        -122.4058,
+        37.7887
+      ],
+      "b": [
+        -122.4944,
+        37.7558
+      ]
+    },
+    {
+      "label": "Castro \u2192 Bayview",
+      "a": [
+        -122.435,
+        37.7609
+      ],
+      "b": [
+        -122.39,
+        37.735
+      ]
+    }
+  ],
+  "overtureRelease": "2026-07-22.0",
+  "cameraSource": "DeFlock / OpenStreetMap (crowdsourced, incomplete lower bound)",
+  "refreshed": "2026-08-31",
+  "counts": {
+    "nodes": 45161,
+    "edges": 54476,
+    "cameras": 1907,
+    "alpr": 526,
+    "flock": 494,
+    "watchedEdges": 4152
+  }
+}

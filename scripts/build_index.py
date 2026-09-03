@@ -25,8 +25,8 @@ def main() -> None:
     for slug, m in registry.items():
         counts = m.get("counts")
         if not counts:
-            # in the registry but not built yet (or a failed build) — no data on
-            # R2 to point at, so leave it out of the index.
+            # in the registry but not built yet (or a failed build) — no data
+            # under web/public/data to point at, so leave it out of the index.
             skipped.append(slug)
             continue
         cities.append({
