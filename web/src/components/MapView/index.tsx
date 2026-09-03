@@ -7,7 +7,7 @@ import type { Theme } from "@/components/ThemeProvider";
 import { emptyFC, initMapLayers, lineFC, pointsFC, setCamVisibility, setDemographics } from "@/lib/mapLayers";
 import type { OverlayVar } from "@/lib/demographics";
 import { syncLiveMarker, syncMarker } from "@/lib/markers";
-import { reverseGeocode } from "@/lib/geocode";
+import { osmEditUrl, reverseGeocode } from "@/lib/geocode";
 import type { Mode } from "@/components/Panel";
 
 /** A point to fly to, tagged with a nonce so repeats re-trigger the effect. */
@@ -159,6 +159,13 @@ export default function MapView({
     else if (isFlock) parts.push(`<div class="cam-tag">Flock Safety</div>`);
     if (meta.length) parts.push(`<div class="cam-meta">${escapeHtml(meta.join(" · "))}</div>`);
     parts.push(`<div class="cam-addr">${escapeHtml(address)}</div>`);
+    // funnel corrections to the source: OpenStreetMap (what DeFlock reads from).
+    // Camera data is crowdsourced, so removals/edits happen upstream — then a
+    // refresh clears it here for everyone.
+    const fix = osmEditUrl(cam[0], cam[1]);
+    parts.push(
+      `<a class="cam-report" href="${fix}" target="_blank" rel="noreferrer">Camera gone or wrong? Fix it at the source ↗</a>`,
+    );
     return `<div class="cam-popup">${parts.join("")}</div>`;
   }
 

@@ -311,6 +311,17 @@ body.driving .maplibregl-ctrl-top-right {
   padding-top: 6px;
   border-top: 1px solid var(--border);
 }
+.cam-popup .cam-report {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand);
+  text-decoration: none;
+}
+.cam-popup .cam-report:hover {
+  text-decoration: underline;
+}
 
 /* Glassy floating panel over the map. */
 .glass {

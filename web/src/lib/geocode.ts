@@ -39,6 +39,15 @@ export async function geocode(
   }
 }
 
+/**
+ * OpenStreetMap iD-editor deep link at a point — camera data is crowdsourced
+ * into OSM (what DeFlock reads from), so a removed/wrong camera gets fixed at
+ * the source there, then a refresh clears it here. Note: OSM's hash is lat/lon.
+ */
+export function osmEditUrl(lon: number, lat: number): string {
+  return `https://www.openstreetmap.org/edit#map=20/${lat}/${lon}`;
+}
+
 function labelFromProps(p: any): string {
   const bits = [
     p.name,

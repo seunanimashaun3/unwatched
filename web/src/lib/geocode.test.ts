@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { geocode } from "./geocode";
+import { geocode, osmEditUrl } from "./geocode";
 import type { LngLat } from "./types";
 
 const NEAR: LngLat = [-122.43, 37.77]; // bias point (San Francisco)
@@ -16,6 +16,12 @@ afterEach(() => vi.unstubAllGlobals());
 const feature = (lon: number, lat: number, props: Record<string, string>) => ({
   geometry: { type: "Point", coordinates: [lon, lat] },
   properties: { countrycode: "US", ...props }, // US by default; override to test filtering
+});
+
+describe("osmEditUrl", () => {
+  it("builds an OSM iD-editor deep link (hash is lat/lon)", () => {
+    expect(osmEditUrl(-86.29, 36.21)).toBe("https://www.openstreetmap.org/edit#map=20/36.21/-86.29");
+  });
 });
 
 describe("geocode", () => {
